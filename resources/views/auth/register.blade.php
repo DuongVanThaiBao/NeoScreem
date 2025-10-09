@@ -1,127 +1,145 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đăng ký Rạp Phim</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      background: #000;
-      font-family: Arial, sans-serif;
-      overflow: hidden;
-      color: #fff;
-    }
-    /* Nền phim trượt */
-    .movie-strip {
-      position: fixed;
-      top: 0; left: 0;
-      width: 200%;
-      height: 100%;
-      display: flex;
-      animation: slide 60s linear infinite alternate;
-      z-index: -1;
-    }
-    .movie-strip img {
-      width: 20%;
-      object-fit: cover;
-      opacity: 0.5;
-      filter: blur(1px);
-    }
-    @keyframes slide {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    /* Form đăng ký */
-    .register-card {
-      max-width: 500px;
-      width: 90%;
-      padding: 3rem;
-      border-radius: 20px;
-      background-color: rgba(255,255,255,0.15);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 4px 30px rgba(0,0,0,0.6);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .register-card:hover {
-      transform: scale(1.02);
-      box-shadow: 0 8px 40px rgba(0,0,0,0.8);
-    }
-    .register-card h3 {
-      color: #ffd700;
-    }
-    .form-control {
-      background-color: rgba(255,255,255,0.1);
-      border: none;
-      color: #fff;
-    }
-    .form-control:focus {
-      background-color: rgba(255,255,255,0.2);
-      color: #fff;
-    }
-    .btn-custom {
-      background: linear-gradient(90deg, #ff9800, #ffc107);
-      color: #fff;
-      border: none;
-      transition: all 0.3s ease;
-    }
-    .btn-custom:hover, .btn-custom:active {
-      background: linear-gradient(90deg, #ffc107, #ff9800);
-      color: #fff;
-    }
-    a { color: #ffd700; text-decoration: none; }
-    a:hover { text-decoration: underline; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account</title>
+
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin href="https://fonts.gstatic.com" rel="preconnect">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#ea2a33",
+                        "background-light": "#f8f6f6",
+                        "background-dark": "#121212",
+                    },
+                    fontFamily: {
+                        display: ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+
+    <style type="text/tailwindcss">
+        @keyframes poster-rotate {
+          0%, 100% { transform: scale(1.1) rotate(0deg) translateX(5%); }
+          25% { transform: scale(1.15) rotate(1deg) translateX(0%); }
+          50% { transform: scale(1.1) rotate(0deg) translateX(-5%); }
+          75% { transform: scale(1.05) rotate(-1deg) translateX(0%); }
+        }
+        .poster-animation { animation: poster-rotate 40s ease-in-out infinite; }
+    </style>
 </head>
-<body>
+<body class="bg-background-dark font-display text-gray-200">
 
-  <!-- Nền phim -->
-  <div class="movie-strip">
-    <img src="https://image.tmdb.org/t/p/w500/6MKr3KgOLmzOP6MSuZERO41Lpkt.jpg" alt="">
-    <img src="https://image.tmdb.org/t/p/w500/2uNW4WbgBXL25BAbXGLnLqX71Sw.jpg" alt="">
-    <img src="https://image.tmdb.org/t/p/w500/q719jXXEzOoYaps6babgKnONONX.jpg" alt="">
-    <img src="https://image.tmdb.org/t/p/w500/9O7gLzmreU0nGkIB6K3BsJbzvNv.jpg" alt="">
-    <img src="https://image.tmdb.org/t/p/w500/wXsQvli6tWqja51pYxXNG1LFIGV.jpg" alt="">
-    <img src="https://image.tmdb.org/t/p/w500/6MKr3KgOLmzOP6MSuZERO41Lpkt.jpg" alt="">
-    <img src="https://image.tmdb.org/t/p/w500/2uNW4WbgBXL25BAbXGLnLqX71Sw.jpg" alt="">
-    <img src="https://image.tmdb.org/t/p/w500/q719jXXEzOoYaps6babgKnONONX.jpg" alt="">
-    <img src="https://image.tmdb.org/t/p/w500/9O7gLzmreU0nGkIB6K3BsJbzvNv.jpg" alt="">
-    <img src="https://image.tmdb.org/t/p/w500/wXsQvli6tWqja51pYxXNG1LFIGV.jpg" alt="">
-  </div>
+<div class="relative min-h-screen flex items-center justify-center lg:justify-start">
+    <div class="absolute inset-0 z-10 lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
+        <div class="absolute inset-0 bg-background-dark/80 lg:bg-transparent lg:bg-gradient-to-r from-background-dark via-background-dark/70 to-transparent"></div>
 
-  <!-- Form đăng ký -->
-  <div class="d-flex justify-content-center align-items-center vh-100">
-    <div class="register-card text-white">
-      <h3 class="text-center mb-4">🎬 Đăng ký Rạp Phim</h3>
-      <form method="POST" action="{{ route('register') }}">
-        @csrf
-        <div class="mb-3">
-          <label for="name" class="form-label">Họ và tên</label>
-          <input type="text" id="name" name="name" class="form-control" placeholder="Nhập họ tên" required>
+        <div class="relative z-10 w-full max-w-md">
+            <div class="flex items-center gap-3 mb-8 justify-center lg:justify-start">
+                <div class="w-10 h-10 text-primary">
+                    <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M36.7273 44C33.9891 44 31.6043 39.8386 30.3636 33.69C29.123 39.8386 26.7382 44 24 44C21.2618 44 18.877 39.8386 17.6364 33.69C16.3957 39.8386 14.0109 44 11.2727 44C7.25611 44 4 35.0457 4 24C4 12.9543 7.25611 4 11.2727 4C14.0109 4 16.3957 8.16144 17.6364 14.31C18.877 8.16144 21.2618 4 24 4C26.7382 4 29.123 8.16144 30.3636 14.31C31.6043 8.16144 33.9891 4 36.7273 4C40.7439 4 44 12.9543 44 24C44 35.0457 40.7439 44 36.7273 44Z" fill="currentColor"/>
+                    </svg>
+                </div>
+                <h2 class="text-2xl font-bold text-white">NeoScreem</h2>
+            </div>
+
+            <div class="text-center lg:text-left mb-8">
+                <h1 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">Create Account</h1>
+                <p class="mt-2 text-gray-400">Join us and start your movie journey today.</p>
+            </div>
+
+            
+            <form method="POST" action="{{ route('register') }}" 
+                  class="bg-black/30 backdrop-blur-xl p-8 rounded-2xl shadow-2xl space-y-6 border border-white/10"
+                  x-data="{ passwordVisible: false, confirmPasswordVisible: false }">
+                @csrf
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300" for="username">Full Name</label>
+                        <input id="username" name="name" type="text" required
+                               class="form-input w-full rounded-lg border-transparent bg-black/30 focus:ring-primary focus:border-primary h-12 px-4 text-white placeholder-gray-500 form-control"
+                               placeholder="Enter your full name" value="{{ old('name') }}">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300" for="email">Email Address</label>
+                        <input id="email" name="email" type="email" required
+                               class="form-input w-full rounded-lg border-transparent bg-black/30 focus:ring-primary focus:border-primary h-12 px-4 text-white placeholder-gray-500 form-control"
+                               placeholder="Enter your email" value="{{ old('email') }}">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300" for="password">Password</label>
+                        <div class="relative mt-1">
+                            <input :type="passwordVisible ? 'text' : 'password'" id="password" name="password"
+                                   class="form-input w-full rounded-lg border-transparent bg-black/30 focus:ring-primary focus:border-primary h-12 px-4 pr-12 text-white placeholder-gray-500 form-control"
+                                   placeholder="Create a password" required>
+                            <button type="button" 
+                                    @click="passwordVisible = !passwordVisible"
+                                    class="absolute inset-y-0 right-0 flex items-center px-4 text-gray-400 hover:text-white">
+                                <span class="material-symbols-outlined" 
+                                      x-text="passwordVisible ? 'visibility_off' : 'visibility'"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-300" for="confirm-password">Confirm Password</label>
+                        <div class="relative mt-1">
+                            <input :type="confirmPasswordVisible ? 'text' : 'password'" id="confirm-password" 
+                                   name="password_confirmation" required
+                                   class="form-input w-full rounded-lg border-transparent bg-black/30 focus:ring-primary focus:border-primary h-12 px-4 pr-12 text-white placeholder-gray-500 form-control"
+                                   placeholder="Confirm your password">
+                            <button type="button" 
+                                    @click="confirmPasswordVisible = !confirmPasswordVisible"
+                                    class="absolute inset-y-0 right-0 flex items-center px-4 text-gray-400 hover:text-white">
+                                <span class="material-symbols-outlined" 
+                                      x-text="confirmPasswordVisible ? 'visibility_off' : 'visibility'"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-background-dark focus:ring-primary transition-all duration-300">
+                    Register
+                </button>
+            </form>
+
+            <p class="text-center text-sm text-gray-400 mt-8">
+                Already have an account?
+                <a href="{{ route('login') }}" class="font-medium text-primary hover:text-primary/80">Log in</a>
+            </p>
         </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="email" id="email" name="email" class="form-control" placeholder="Nhập email" required>
-        </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Mật khẩu</label>
-          <input type="password" id="password" name="password" class="form-control" placeholder="Nhập mật khẩu" required>
-        </div>
-        <div class="mb-3">
-          <label for="password_confirmation" class="form-label">Xác nhận mật khẩu</label>
-          <input type="password" id="password_confirmation" name="password_confirmation" class="form-control" placeholder="Nhập lại mật khẩu" required>
-        </div>
-        <button type="submit" class="btn btn-custom w-100 py-2">Đăng ký</button>
-      </form>
-      <div class="text-center mt-3">
-        <a href="{{ route('login') }}">Đã có tài khoản? Đăng nhập</a><br>
-        <a href="{{ route('password.request') }}">Quên mật khẩu?</a>
-      </div>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <div class="absolute inset-0 lg:left-1/2">
+        <div class="h-full w-full overflow-hidden">
+            <img src="{{ asset('storage/banner.jpg') }}"
+                 alt="Movie poster"
+                 class="h-full w-full object-cover poster-animation">
+        </div>
+    </div>
+</div>
+
+<script defer src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
 </body>
 </html>
