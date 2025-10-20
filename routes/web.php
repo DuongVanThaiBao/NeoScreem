@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\VerificationController;
 use Illuminate\Support\Facades\Auth; // Thêm dòng này để sử dụng Auth facade
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ProfileController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
@@ -55,3 +56,14 @@ Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->
 Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
 Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.store');
 
+// Route để xử lý cập nhật thông tin cá nhân
+Route::post('/profile/info', [ProfileController::class, 'updateInfo'])->name('profile.update.info');
+
+// Route để xử lý đổi mật khẩu
+Route::post('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update.password');
+
+// Route cho trang thành viên
+Route::get('/profile/membership', [ProfileController::class, 'showMembership'])->name('profile.membership');
+
+// Route cho trang lịch sử mua hàng
+Route::get('/profile/history', [ProfileController::class, 'showHistory'])->name('profile.history');
