@@ -14,6 +14,13 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
+    public function index()
+    {
+        $phimDangChieu = \App\Models\Phim::where('trang_thai', 'dang_chieu')->take(10)->get();
+        $phimSapChieu  = \App\Models\Phim::where('trang_thai', 'sap_chieu')->take(10)->get();
+
+        return view('home', compact('phimDangChieu', 'phimSapChieu'));
+    }
     public function login(Request $request)
     {
         // Validate dữ liệu

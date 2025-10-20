@@ -8,16 +8,21 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\VerificationController;
 use Illuminate\Support\Facades\Auth; // Thêm dòng này để sử dụng Auth facade
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\CartController;
 
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+});
 // use App\Http\Controllers\Admin\AdminController; // Dòng này không còn cần thiết nữa
-
 Route::get('/verify', [VerificationController::class, 'showVerificationForm'])->name('verify.form');
 Route::post('/verify', [VerificationController::class, 'verify'])->name('verify.check');
 
 // Gửi mã (ví dụ sau khi đăng ký xong)
 Route::get('/send-code/{email}', [VerificationController::class, 'sendVerificationCode'])->name('verify.send');
 Route::get('/', [HomeController::class, 'index'])->name('home');
-
+Route::get('/home', [HomeController::class, 'index']);
 // Register
 Route::get('/register', [RegisterMsController::class, 'showRegister'])->name('register');
 Route::post('/register', [RegisterMsController::class, 'register']);
