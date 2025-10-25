@@ -34,9 +34,8 @@ class LoginController extends Controller
 
             // Kiểm tra role của người dùng
             if ($user->role === 'admin') {
-                // Nếu là admin, chuyển hướng đến trang dashboard của admin
-                // Giả sử bạn có route tên là 'admin.dashboard'
-                return redirect()->route('admin.dashboard')->with('success', 'Chào mừng Admin quay trở lại!');
+                // Nếu là admin, chuyển hướng đến trang chủ admin trước
+                return redirect()->route('admin.admin')->with('success', 'Chào mừng Admin quay trở lại!');
             }
 
             // Nếu là user thường, chuyển hướng đến trang home

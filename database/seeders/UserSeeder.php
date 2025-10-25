@@ -11,11 +11,13 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@cinema.com',
-            'password' => Hash::make('admin123'),
-            'role' => 'admin',
-        ]);
+        // User thường sẽ được tạo tự nhiên thông qua hệ thống đăng ký
+        // Khi người dùng đăng ký thành công, họ sẽ trở thành user với role = 'user'
+        // Không cần tạo user mẫu cố định ở đây
+
+        // Thông tin đăng nhập user thường:
+        // - Email: Bất kỳ email nào người dùng đăng ký
+        // - Password: Người dùng tự đặt khi đăng ký
+        // - Role: 'user' (tự động gán khi đăng ký thành công)
     }
 }

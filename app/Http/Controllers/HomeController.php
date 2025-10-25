@@ -13,7 +13,8 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // Removed auth middleware - home page should be accessible to all users
+        // $this->middleware('auth');
     }
 
     /**

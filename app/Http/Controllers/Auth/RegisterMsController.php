@@ -42,8 +42,8 @@ class RegisterMsController extends Controller
                     ->subject('Xác minh tài khoản NeoScreem');
         });
 
-        // Chuyển đến trang xác minh
-        return redirect()->route('verify.form')->with('email', $user->email);
+        // Chuyển đến trang xác minh với thông báo thành công
+        return redirect()->route('verify.form')->with('success', 'Đăng ký thành công! Vui lòng kiểm tra email để xác minh tài khoản.');
 
         Auth::login($user);
         return redirect()->route('home')->with('success', 'Register successful!');

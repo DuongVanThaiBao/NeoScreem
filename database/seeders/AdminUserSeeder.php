@@ -14,10 +14,10 @@ class AdminUserSeeder extends Seeder
     public function run(): void
     {
         User::firstOrCreate(
-            ['email' => 'thaibao123xyz@gmail.com'], // Tìm user bằng email để tránh tạo trùng
+            ['email' => 'admin@neoscreem.com'], // Tìm user bằng email để tránh tạo trùng
             [
-                'name' => 'Admin',
-                'password' => Hash::make('thaibao123xyz'), // Thay mật khẩu ở đây
+                'name' => 'Administrator',
+                'password' => Hash::make('admin123'), // Mật khẩu admin123
                 'role' => 'admin',
             ]
         );

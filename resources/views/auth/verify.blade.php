@@ -47,6 +47,10 @@
                         <strong class="font-semibold text-white/90">{{ $email }}</strong>
                     </p>
                 </div>
+                @if(session('success'))
+                <div id="success-message" class="p-4 text-sm text-green-200 bg-green-500/20 rounded-lg" role="alert">{{ session('success') }}</div>
+                @endif
+
                 @if(session('error'))
                 <div class="p-4 text-sm text-red-200 bg-red-500/20 rounded-lg" role="alert">{{ session('error') }}</div>
                 @endif
@@ -123,4 +127,20 @@
         </div>
     </div>
 </body>
+
+<script>
+    // Auto-hide success messages after 3 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        const successMessage = document.getElementById('success-message');
+        if (successMessage) {
+            setTimeout(function() {
+                successMessage.style.transition = 'opacity 0.5s ease-out';
+                successMessage.style.opacity = '0';
+                setTimeout(function() {
+                    successMessage.remove();
+                }, 500);
+            }, 3000);
+        }
+    });
+</script>
 </html>
