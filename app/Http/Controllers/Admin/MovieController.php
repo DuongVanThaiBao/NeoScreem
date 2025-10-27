@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class MovieController extends Controller
 {
@@ -14,8 +15,9 @@ class MovieController extends Controller
      */
     public function index(Request $request)
     {
-        if (!Session::has('movies')) {
-            Session::put('movies', [
+        $storagePath = 'movies.json';
+        if (!Storage::disk('local')->exists($storagePath)) {
+            Storage::disk('local')->put($storagePath, json_encode([
             [
                 'id' => 1,
                 'title' => 'Avatar: The Way of Water',
@@ -106,9 +108,9 @@ class MovieController extends Controller
                 'tickets_sold' => 0,
                 'revenue' => 0
             ]
-        ]);
+        ], JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
         }
-        $movies = Session::get('movies', []);
+        $movies = json_decode(Storage::disk('local')->get($storagePath), true) ?: [];
 
         // Filter movies based on search
         $search = $request->get('search');
@@ -168,10 +170,37 @@ class MovieController extends Controller
             'poster' => 'nullable|url',
             'trailer' => 'nullable|url'
         ]);
+        $storagePath = 'movies.json';
+        $movies = Storage::disk('local')->exists($storagePath)
+            ? json_decode(Storage::disk('local')->get($storagePath), true) ?: []
+            : [];
 
-        // In real app, this would save to database
-        // For now, we'll just return success message
-        
+        // Assign the smallest available positive integer ID starting from 1
+        $used = array_map(fn($m)=> (int)($m['id'] ?? 0), $movies);
+        $newId = 1;
+        sort($used);
+        foreach ($used as $u) { if ($u === $newId) { $newId++; } elseif ($u > $newId) { break; } }
+        $movies[] = [
+            'id' => $newId,
+            'title' => $request->input('title'),
+            'genre' => $request->input('genre'),
+            'director' => $request->input('director'),
+            'cast' => $request->input('cast'),
+            'duration' => (int)$request->input('duration'),
+            'release_date' => $request->input('release_date'),
+            'status' => $request->input('status'),
+            'language' => $request->input('language'),
+            'country' => $request->input('country'),
+            'description' => $request->input('description'),
+            'poster' => $request->input('poster'),
+            'trailer' => $request->input('trailer'),
+            // Derived/initial fields
+            'rating' => 0,
+            'tickets_sold' => 0,
+            'revenue' => 0,
+        ];
+
+        Storage::disk('local')->put($storagePath, json_encode($movies, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
         return redirect()->route('admin.movies')->with('success', 'Phim mới đã được thêm thành công!');
     }
 
@@ -180,23 +209,14 @@ class MovieController extends Controller
      */
     public function edit($id)
     {
-        // In real app, this would fetch from database
-        $movie = [
-            'id' => $id,
-            'title' => 'Sample Movie',
-            'genre' => 'Action',
-            'director' => 'Sample Director',
-            'cast' => 'Sample Cast',
-            'duration' => 120,
-            'release_date' => '2023-01-01',
-            'status' => 'sắp chiếu',
-            'language' => 'English',
-            'country' => 'USA',
-            'description' => 'Sample description',
-            'poster' => '',
-            'trailer' => ''
-        ];
-
+        $storagePath = 'movies.json';
+        $movies = Storage::disk('local')->exists($storagePath)
+            ? json_decode(Storage::disk('local')->get($storagePath), true) ?: []
+            : [];
+        $movie = collect($movies)->firstWhere('id', (int)$id);
+        if (!$movie) {
+            return redirect()->route('admin.movies')->with('error', 'Không tìm thấy phim để sửa.');
+        }
         return view('admin.movies.edit', compact('movie'));
     }
 
@@ -220,9 +240,30 @@ class MovieController extends Controller
             'trailer' => 'nullable|url'
         ]);
 
-        // In real app, this would update the database
-        // For now, we'll just return success message
-        
+        $storagePath = 'movies.json';
+        $movies = Storage::disk('local')->exists($storagePath)
+            ? json_decode(Storage::disk('local')->get($storagePath), true) ?: []
+            : [];
+
+        // Find movie index
+        $idx = null;
+        foreach ($movies as $i => $m) {
+            if ((int)$m['id'] === (int)$id) { $idx = $i; break; }
+        }
+        if ($idx === null) {
+            return redirect()->route('admin.movies')->with('error', 'Không tìm thấy phim để cập nhật.');
+        }
+
+        // Update allowed fields, keep others intact if not in form
+        $fields = ['title','genre','director','cast','duration','release_date','status','language','country','description','poster','trailer'];
+        foreach ($fields as $field) {
+            if ($request->has($field)) {
+                $movies[$idx][$field] = $request->input($field);
+            }
+        }
+
+        Storage::disk('local')->put($storagePath, json_encode($movies, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
+
         return redirect()->route('admin.movies')->with('success', 'Thông tin phim đã được cập nhật thành công!');
     }
 
@@ -231,9 +272,12 @@ class MovieController extends Controller
      */
     public function destroy($id)
     {
-        $movies = Session::get('movies', []);
+        $storagePath = 'movies.json';
+        $movies = Storage::disk('local')->exists($storagePath)
+            ? json_decode(Storage::disk('local')->get($storagePath), true) ?: []
+            : [];
         $movies = array_values(array_filter($movies, function($m) use ($id){ return (int)$m['id'] !== (int)$id; }));
-        Session::put('movies', $movies);
+        Storage::disk('local')->put($storagePath, json_encode($movies, JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES));
         return redirect()->route('admin.movies')->with('success', 'Phim đã được xóa thành công!');
     }
 

@@ -10,9 +10,11 @@ use App\Http\Controllers\Auth\{
 use App\Http\Controllers\Admin\StatisticsController;
 use App\Http\Controllers\Admin\StoreController;
 use App\Http\Controllers\Admin\MovieController;
+use App\Http\Controllers\Admin\EmployeeController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\HomeController;
+use Illuminate\Http\Request;
 
 // Verification routes
 Route::get('/verify', [VerificationController::class, 'showVerificationForm'])->name('verify.form');
@@ -71,6 +73,179 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/statistics/update', [StatisticsController::class, 'update']);
         Route::get('/statistics/date', [StatisticsController::class, 'getByDate']);
     });
+
+    // HR Employees routes
+    Route::prefix('admin/hr')->name('admin.hr.')->group(function(){
+        Route::get('/schedules', [\App\Http\Controllers\Admin\ScheduleController::class, 'index'])->name('schedules');
+        Route::post('/schedules', [\App\Http\Controllers\Admin\ScheduleController::class, 'store'])->name('schedules.store');
+        Route::get('/reports', [\App\Http\Controllers\Admin\HrReportsController::class, 'index'])->name('reports');
+        Route::get('/reports/export/csv', [\App\Http\Controllers\Admin\HrReportsController::class, 'exportCsv'])->name('reports.export.csv');
+        Route::get('/reports/export/print', [\App\Http\Controllers\Admin\HrReportsController::class, 'exportPrint'])->name('reports.export.print');
+        Route::post('/reports/schedule', [\App\Http\Controllers\Admin\HrReportsController::class, 'storeSchedule'])->name('reports.schedule');
+        Route::post('/reports/template', [\App\Http\Controllers\Admin\HrReportsController::class, 'storeTemplate'])->name('reports.template');
+        Route::resource('employees', EmployeeController::class);
+    });
+
+    // System settings (closure-based)
+    Route::get('/admin/system/settings', function(){
+        $path = storage_path('app/settings.json');
+        $settings = [];
+        if (file_exists($path)) {
+            try { $settings = json_decode(file_get_contents($path), true) ?: []; } catch (\Throwable $e) { $settings = []; }
+        }
+        return view('admin.system.settings', compact('settings'));
+    })->name('admin.system.settings');
+
+    Route::put('/admin/system/settings', function(Request $request){
+        $validated = $request->validate([
+            'cinema_name' => 'required|string|max:255',
+            'phone' => 'nullable|string|max:50',
+            'address' => 'nullable|string|max:500',
+            'work_hours' => 'required|array',
+            'work_hours.*.open' => 'required|date_format:H:i',
+            'work_hours.*.close' => 'required|date_format:H:i',
+            'ticket_prices' => 'required|array',
+            'ticket_prices.standard' => 'required|numeric|min:0',
+            'ticket_prices.3d' => 'required|numeric|min:0',
+            'ticket_prices.imax' => 'required|numeric|min:0',
+        ]);
+
+        $settings = [
+            'cinema_name' => $validated['cinema_name'],
+            'phone' => $validated['phone'] ?? '',
+            'address' => $validated['address'] ?? '',
+            'work_hours' => array_map(function($day){
+                return [
+                    'open' => $day['open'] ?? '08:00',
+                    'close' => $day['close'] ?? '22:00',
+                    'is_holiday' => isset($day['is_holiday']) && (bool)$day['is_holiday'],
+                ];
+            }, $validated['work_hours']),
+            'ticket_prices' => $validated['ticket_prices'],
+            'maintenance_mode' => (bool)$request->boolean('maintenance_mode'),
+            'allow_online_booking' => (bool)$request->boolean('allow_online_booking', true),
+            'enable_email_notifications' => (bool)$request->boolean('enable_email_notifications', true),
+            'updated_at' => now()->toDateTimeString(),
+        ];
+
+        $path = storage_path('app/settings.json');
+        try { file_put_contents($path, json_encode($settings, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE)); } catch (\Throwable $e) {}
+
+        return redirect()->route('admin.system.settings')->with('success', 'Đã lưu cài đặt hệ thống');
+    })->name('admin.system.settings.update');
+
+    // System security (closure-based)
+    Route::get('/admin/system/security', function(){
+        $path = storage_path('app/security.json');
+        $security = [];
+        if (file_exists($path)) {
+            try { $security = json_decode(file_get_contents($path), true) ?: []; } catch (\Throwable $e) { $security = []; }
+        }
+        return view('admin.system.security', compact('security'));
+    })->name('admin.system.security');
+
+    Route::put('/admin/system/security', function(Request $request){
+        $validated = $request->validate([
+            'password_policy' => 'required|array',
+            'password_policy.min_length' => 'required|integer|min:6|max:128',
+            'password_policy.require_uppercase' => 'sometimes|boolean',
+            'password_policy.require_number' => 'sometimes|boolean',
+            'two_factor_enabled' => 'sometimes|boolean',
+            'session_timeout' => 'required|integer|min:5|max:1440',
+            'login_attempts_limit' => 'required|integer|min:1|max:10',
+            'ip_whitelist' => 'nullable|string',
+        ]);
+
+        $security = [
+            'password_policy' => [
+                'min_length' => (int)($validated['password_policy']['min_length'] ?? 8),
+                'require_uppercase' => (bool)$request->boolean('password_policy.require_uppercase', true),
+                'require_number' => (bool)$request->boolean('password_policy.require_number', true),
+            ],
+            'two_factor_enabled' => (bool)$request->boolean('two_factor_enabled', false),
+            'session_timeout' => (int)($validated['session_timeout'] ?? 30),
+            'login_attempts_limit' => (int)($validated['login_attempts_limit'] ?? 5),
+            'ip_whitelist' => collect(preg_split("/\r?\n/", trim($validated['ip_whitelist'] ?? '')))
+                                ->filter(fn($v)=>trim($v)!=='')
+                                ->values()->all(),
+            'updated_at' => now()->toDateTimeString(),
+        ];
+
+        $path = storage_path('app/security.json');
+        try { file_put_contents($path, json_encode($security, JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE)); } catch (\Throwable $e) {}
+
+        return redirect()->route('admin.system.security')->with('success', 'Đã lưu cài đặt bảo mật');
+    })->name('admin.system.security.update');
+
+    // System backup
+    Route::get('/admin/system/backup', function(){
+        $dir = storage_path('app/backups');
+        if (!is_dir($dir)) @mkdir($dir, 0775, true);
+        $files = collect(glob($dir.DIRECTORY_SEPARATOR.'*.zip'))
+            ->map(function($p){ return [
+                'name' => basename($p),
+                'size' => number_format(filesize($p)/1024/1024, 2).' MB',
+                'modified' => date('Y-m-d H:i:s', filemtime($p)),
+                'path' => $p,
+            ]; })
+            ->sortByDesc('modified')->values()->all();
+        $backups = $files;
+        return view('admin.system.backup', compact('backups'));
+    })->name('admin.system.backup');
+
+    Route::post('/admin/system/backup/create', function(){
+        $dir = storage_path('app/backups');
+        if (!is_dir($dir)) @mkdir($dir, 0775, true);
+        $name = 'backup_'.date('Ymd_His').'.zip';
+        $zipPath = $dir.DIRECTORY_SEPARATOR.$name;
+        $zip = new ZipArchive();
+        if ($zip->open($zipPath, ZipArchive::CREATE) === true) {
+            // Include app JSON configs as demo data
+            foreach (['settings.json','security.json'] as $f) {
+                $p = storage_path('app'.DIRECTORY_SEPARATOR.$f);
+                if (file_exists($p)) $zip->addFile($p, $f);
+            }
+            // Include .env if exists (optional, comment out if undesired)
+            $env = base_path('.env'); if (file_exists($env)) { $zip->addFile($env, 'env.sample'); }
+            $zip->close();
+        }
+        return redirect()->route('admin.system.backup')->with('success', 'Đã tạo bản sao lưu: '.$name);
+    })->name('admin.system.backup.create');
+
+    Route::get('/admin/system/backup/download', function(Request $request){
+        $file = $request->query('file');
+        $path = storage_path('app/backups'.DIRECTORY_SEPARATOR.$file);
+        abort_unless($file && file_exists($path), 404);
+        return response()->download($path, $file);
+    })->name('admin.system.backup.download');
+
+    Route::post('/admin/system/backup/delete', function(Request $request){
+        $file = $request->query('file');
+        $path = storage_path('app/backups'.DIRECTORY_SEPARATOR.$file);
+        if ($file && file_exists($path)) @unlink($path);
+        return redirect()->route('admin.system.backup')->with('success', 'Đã xóa bản sao lưu');
+    })->name('admin.system.backup.delete');
+
+    // System logs
+    Route::get('/admin/system/logs', function(){
+        $logPath = storage_path('logs/laravel.log');
+        if (!file_exists($logPath)) { @file_put_contents($logPath, ""); }
+        $content = @file_get_contents($logPath) ?: '';
+        $logContent = mb_convert_encoding($content, 'UTF-8', 'UTF-8');
+        return view('admin.system.logs', compact('logContent'));
+    })->name('admin.system.logs');
+
+    Route::post('/admin/system/logs/clear', function(){
+        $logPath = storage_path('logs/laravel.log');
+        @file_put_contents($logPath, "");
+        return redirect()->route('admin.system.logs')->with('success', 'Đã xóa log');
+    })->name('admin.system.logs.clear');
+
+    Route::get('/admin/system/logs/download', function(){
+        $logPath = storage_path('logs/laravel.log');
+        if (!file_exists($logPath)) { @file_put_contents($logPath, ""); }
+        return response()->download($logPath, 'laravel.log');
+    })->name('admin.system.logs.download');
 
     // --- Test update stats ---
     Route::get('/test-update-stats', function () {

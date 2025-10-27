@@ -13,6 +13,7 @@
         .glass-morphism { background: rgba(26,26,26,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(79,195,247,0.15); }
         .layout { display: flex; min-height: 100vh; }
         .main-content { flex: 1; position: relative; z-index: 20; min-height: 100vh; }
+        .header { position: relative; z-index: 100; }
         .sidebar { width: 250px; background: inherit; height: 100vh; position: sticky; top: 0; z-index: 10; overflow-y: auto; }
         .chart-container { background: rgba(26,26,26,0.8); backdrop-filter: blur(10px); border: 1px solid rgba(79,195,247,0.15); border-radius: .5rem; padding: 1.5rem; }
         .table thead th { font-weight: 600; color: #9ca3af; font-size: .75rem; }
@@ -45,6 +46,10 @@
                                    placeholder="Tìm kiếm tên hoặc email..."
                                    value="{{ request('q') }}">
                         </form>
+                        <!-- Autocomplete dropdown -->
+                        <div id="userSearchSuggestions" class="absolute mt-1 left-0 right-0 bg-dark-surface border border-dark-border rounded-lg shadow-lg hidden" style="z-index: 9999;">
+                            <ul id="userSearchSuggestionList" class="max-h-72 overflow-auto divide-y divide-dark-border"></ul>
+                        </div>
                     </div>
                 </div>
 
@@ -301,5 +306,36 @@
             </div>
         </main>
     </div>
+<script>
+(function(){
+  const form = document.getElementById('userSearchForm'); if(!form) return;
+  const input = document.getElementById('q');
+  const box = document.getElementById('userSearchSuggestions');
+  const list = document.getElementById('userSearchSuggestionList');
+  let items=[], activeIndex=-1, timer;
+  function updatePosition(){
+    const r = input.getBoundingClientRect();
+    box.style.position = 'fixed';
+    box.style.left = r.left + 'px';
+    box.style.top = r.bottom + 'px';
+    box.style.width = r.width + 'px';
+    box.style.zIndex = '99999';
+  }
+  function showBox(){ updatePosition(); box.classList.remove('hidden'); }
+  function hideBox(){ box.classList.add('hidden'); activeIndex=-1; }
+  function clearList(){ list.innerHTML=''; items=[]; activeIndex=-1; }
+  function sidebarEntries(){ const arr=[]; document.querySelectorAll('aside.sidebar a').forEach(a=>{ const label=(a.textContent||'').trim(); const href=a.getAttribute('href')||'#'; if(label) arr.push({type:'nav', label, href});}); return arr; }
+  function buildSuggestions(q){ const query=q.trim(); if(!query) return []; const ql=query.toLowerCase(); const nav=sidebarEntries().filter(x=>x.label.toLowerCase().includes(ql)).slice(0,5); const ents=[{type:'entity', entity:'user', label:`Tìm người dùng: "${query}"`, payload:`user:${query}`}]; return [...ents, ...nav]; }
+  function render(data){ clearList(); items=data; if(items.length===0){ hideBox(); return;} const frag=document.createDocumentFragment(); items.forEach((it,idx)=>{ const li=document.createElement('li'); li.className='px-3 py-2 hover:bg-white/5 cursor-pointer flex items-center justify-between'; const span=document.createElement('span'); span.textContent=it.label; const meta=document.createElement('span'); meta.className='text-xs text-gray-400'; meta.textContent= it.type==='nav'?'Điều hướng':'Người dùng'; li.appendChild(span); li.appendChild(meta); li.addEventListener('mousedown', e=>{ e.preventDefault(); select(idx);}); frag.appendChild(li);}); list.appendChild(frag); showBox(); }
+  function highlight(){ Array.from(list.children).forEach((el,i)=>{ if(i===activeIndex) el.classList.add('bg-white/10'); else el.classList.remove('bg-white/10');}); }
+  function select(i){ const it=items[i]; if(!it) return; if(it.type==='nav' && it.href && it.href!=='#'){ window.location.href=it.href; return;} input.value=it.payload; form.submit(); }
+  input.addEventListener('input', function(){ clearTimeout(timer); const q=this.value; timer=setTimeout(()=>{ render(buildSuggestions(q)); }, 120); });
+  input.addEventListener('keydown', function(e){ if(box.classList.contains('hidden')) return; const max=items.length-1; if(e.key==='ArrowDown'){ e.preventDefault(); activeIndex=Math.min(max,activeIndex+1); highlight(); } else if(e.key==='ArrowUp'){ e.preventDefault(); activeIndex=Math.max(0,activeIndex-1); highlight(); } else if(e.key==='Enter'){ if(activeIndex>=0){ e.preventDefault(); select(activeIndex);} } else if(e.key==='Escape'){ hideBox(); }});
+  document.addEventListener('click', function(e){ if(!box.contains(e.target) && e.target!==input) hideBox(); });
+  window.addEventListener('resize', updatePosition);
+  window.addEventListener('scroll', updatePosition, true);
+  form.addEventListener('submit', function(e){ const q=(input.value||'').trim().toLowerCase(); if(!q) return; const links=document.querySelectorAll('aside.sidebar a'); for(const a of links){ const label=(a.textContent||'').trim().toLowerCase(); const href=a.getAttribute('href')||'#'; if(label.includes(q) && href!=='#'){ e.preventDefault(); window.location.href=href; return; } } });
+})();
+</script>
 </body>
 </html>

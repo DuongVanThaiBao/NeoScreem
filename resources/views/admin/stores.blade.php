@@ -259,6 +259,10 @@
             z-index: 20;
             min-height: 100vh;
         }
+        .header {
+            position: relative;
+            z-index: 100;
+        }
         .sidebar {
             width: 250px;
             background: inherit;
@@ -296,9 +300,18 @@
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="fas fa-search text-gray-400"></i>
                         </div>
-                        <input type="text"
-                               class="block w-full pl-10 pr-3 py-2 border border-dark-border rounded-lg bg-dark-surface text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-retail-green focus:border-transparent"
-                               placeholder="Tìm kiếm thông tin cửa hàng...">
+                        <form method="GET" action="{{ url('/admin/stores') }}" class="block" id="storeSearchForm">
+                            <input type="text"
+                                   name="search"
+                                   id="store_search"
+                                   class="block w-full pl-10 pr-3 py-2 border border-dark-border rounded-lg bg-dark-surface text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-retail-green focus:border-transparent"
+                                   placeholder="Tìm kiếm thông tin cửa hàng..."
+                                   value="{{ request('search') }}">
+                        </form>
+                        <!-- Autocomplete dropdown -->
+                        <div id="storeSearchSuggestions" class="absolute mt-1 left-0 right-0 bg-dark-surface border border-dark-border rounded-lg shadow-lg hidden" style="z-index: 9999;">
+                            <ul id="storeSearchSuggestionList" class="max-h-72 overflow-auto divide-y divide-dark-border"></ul>
+                        </div>
                     </div>
                 </div>
 
@@ -761,3 +774,36 @@
     </script>
 </body>
 </html>
+<script>
+(function(){
+  const form = document.getElementById('storeSearchForm'); if (!form) return;
+  const input = document.getElementById('store_search');
+  const box = document.getElementById('storeSearchSuggestions');
+  const list = document.getElementById('storeSearchSuggestionList');
+  let items = [], activeIndex = -1, timer;
+  function updatePosition(){
+    const r = input.getBoundingClientRect();
+    box.style.position = 'fixed';
+    box.style.left = r.left + 'px';
+    box.style.top = (r.bottom) + 'px';
+    box.style.width = r.width + 'px';
+    box.style.zIndex = '99999';
+    box.style.pointerEvents = 'auto';
+  }
+  function showBox(){ updatePosition(); box.classList.remove('hidden'); }
+  function hideBox(){ box.classList.add('hidden'); activeIndex = -1; }
+  function clearList(){ list.innerHTML = ''; items = []; activeIndex = -1; }
+  function sidebarEntries(){ const arr=[]; document.querySelectorAll('aside.sidebar a').forEach(a=>{ const label=(a.textContent||'').trim(); const href=a.getAttribute('href')||'#'; if(label) arr.push({type:'nav',label,href});}); return arr; }
+  function buildSuggestions(q){ const query=q.trim(); if(!query) return []; const ql=query.toLowerCase(); const nav=sidebarEntries().filter(x=>x.label.toLowerCase().includes(ql)).slice(0,5); const ents=[{type:'entity',entity:'store',label:`Tìm cửa hàng: "${query}"`,payload:`store:${query}`}]; return [...ents,...nav]; }
+  function render(data){ clearList(); items=data; if(items.length===0){ hideBox(); return;} const frag=document.createDocumentFragment(); items.forEach((it,idx)=>{ const li=document.createElement('li'); li.className='px-3 py-2 hover:bg-white/5 cursor-pointer flex items-center justify-between'; const span=document.createElement('span'); span.textContent=it.label; const meta=document.createElement('span'); meta.className='text-xs text-gray-400'; meta.textContent= it.type==='nav'?'Điều hướng': 'Cửa hàng'; li.appendChild(span); li.appendChild(meta); li.addEventListener('mousedown',e=>{ e.preventDefault(); select(idx);}); frag.appendChild(li);}); list.appendChild(frag); showBox(); }
+  function highlight(){ Array.from(list.children).forEach((el,i)=>{ if(i===activeIndex) el.classList.add('bg-white/10'); else el.classList.remove('bg-white/10');}); }
+  function select(i){ const it=items[i]; if(!it) return; if(it.type==='nav' && it.href && it.href!=='#'){ window.location.href=it.href; return;} input.value=it.payload; form.submit(); }
+  input.addEventListener('input', function(){ clearTimeout(timer); const q=this.value; timer=setTimeout(()=>{ render(buildSuggestions(q)); }, 120); });
+  input.addEventListener('keydown', function(e){ if(box.classList.contains('hidden')) return; const max=items.length-1; if(e.key==='ArrowDown'){ e.preventDefault(); activeIndex=Math.min(max, activeIndex+1); highlight(); } else if(e.key==='ArrowUp'){ e.preventDefault(); activeIndex=Math.max(0, activeIndex-1); highlight(); } else if(e.key==='Enter'){ if(activeIndex>=0){ e.preventDefault(); select(activeIndex);} } else if(e.key==='Escape'){ hideBox(); }});
+  document.addEventListener('click', function(e){ if(!box.contains(e.target) && e.target!==input) hideBox(); });
+  window.addEventListener('resize', updatePosition);
+  window.addEventListener('scroll', updatePosition, true);
+  form.addEventListener('submit', function(e){ const q=(input.value||'').trim().toLowerCase(); if(!q) return; const links=document.querySelectorAll('aside.sidebar a'); for(const a of links){ const label=(a.textContent||'').trim().toLowerCase(); const href=a.getAttribute('href')||'#'; if(label.includes(q) && href!=='#'){ e.preventDefault(); window.location.href=href; return; } }
+  });
+})();
+</script>

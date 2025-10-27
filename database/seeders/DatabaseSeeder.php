@@ -2,9 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\Users;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -20,10 +17,8 @@ class DatabaseSeeder extends Seeder
         // Admin cũng là một loại user đặc biệt, có quyền cao hơn.
         // Tất cả người đăng ký thành công đều là "users" của hệ thống.
 
-        // Thông tin đăng nhập Admin:
-        // Email: admin@neoscreem.com
-        // Password: admin123
-        // Role: admin (được tạo bởi AdminUserSeeder)
+        // Tạo tài khoản admin mặc định để truy cập Admin Portal
+        $this->call(AdminUserSeeder::class);
 
         // Thông tin đăng nhập User thường:
         // - Email: Bất kỳ email nào người dùng đăng ký thông qua form đăng ký

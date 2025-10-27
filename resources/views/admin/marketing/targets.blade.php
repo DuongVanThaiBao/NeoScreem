@@ -90,6 +90,30 @@
             </div>
 
             <div class="mb-6">
+                <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Nhân sự</h3>
+                <ul class="space-y-2">
+                    <li>
+                        <a href="/admin/hr/employees" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-retail-green/10 transition-colors">
+                            <i class="fas fa-users text-gray-400"></i>
+                            <span>Quản lý nhân sự</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/hr/schedules" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-retail-green/10 transition-colors">
+                            <i class="fas fa-calendar-check text-gray-400"></i>
+                            <span>Lịch làm việc</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin/hr/reports" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-retail-green/10 transition-colors">
+                            <i class="fas fa-chart-bar text-gray-400"></i>
+                            <span>Báo cáo nhân sự</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="mb-6">
                 <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Hệ thống</h3>
                 <ul class="space-y-2">
                     <li><a href="/admin/system/settings" class="sidebar-item flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-300 hover:text-white hover:bg-retail-green/10 transition-colors"><i class="fas fa-cog text-gray-400"></i><span>Cài đặt hệ thống</span></a></li>

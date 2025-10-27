@@ -859,16 +859,16 @@
                     <div class="chart-container">
                         <h3 class="text-lg font-semibold text-white mb-4">Thao tác nhanh</h3>
                         <div class="grid grid-cols-2 gap-3">
-                            <button class="p-4 bg-dark-surface/50 hover:bg-dark-surface/70 rounded-lg text-left transition-colors">
+                            <a href="/admin/movies" class="p-4 bg-dark-surface/50 hover:bg-dark-surface/70 rounded-lg text-left transition-colors block">
                                 <div class="flex items-center space-x-3">
                                     <i class="fas fa-plus text-retail-green text-lg"></i>
                                     <div>
                                         <div class="text-sm text-white font-medium">Thêm phim</div>
                                         <div class="text-xs text-gray-400">Tạo suất chiếu mới</div>
-                        </div>
-                        </div>
-                            </button>
-                            <button class="p-4 bg-dark-surface/50 hover:bg-dark-surface/70 rounded-lg text-left transition-colors">
+                                    </div>
+                                </div>
+                            </a>
+                            <a href="/admin/users" class="p-4 bg-dark-surface/50 hover:bg-dark-surface/70 rounded-lg text-left transition-colors block">
                                 <div class="flex items-center space-x-3">
                                     <i class="fas fa-users text-blue-400 text-lg"></i>
                                     <div>
@@ -876,8 +876,8 @@
                                         <div class="text-xs text-gray-400">Xem danh sách</div>
                                     </div>
                                 </div>
-                            </button>
-                            <button class="p-4 bg-dark-surface/50 hover:bg-dark-surface/70 rounded-lg text-left transition-colors">
+                            </a>
+                            <a href="/admin/marketing/analytics" class="p-4 bg-dark-surface/50 hover:bg-dark-surface/70 rounded-lg text-left transition-colors block">
                                 <div class="flex items-center space-x-3">
                                     <i class="fas fa-chart-bar text-purple-400 text-lg"></i>
                                     <div>
@@ -885,8 +885,8 @@
                                         <div class="text-xs text-gray-400">Xuất dữ liệu</div>
                                     </div>
                                 </div>
-                            </button>
-                            <button class="p-4 bg-dark-surface/50 hover:bg-dark-surface/70 rounded-lg text-left transition-colors">
+                            </a>
+                            <a href="/admin/system/settings" class="p-4 bg-dark-surface/50 hover:bg-dark-surface/70 rounded-lg text-left transition-colors block">
                                 <div class="flex items-center space-x-3">
                                     <i class="fas fa-cog text-gray-400 text-lg"></i>
                                     <div>
@@ -894,7 +894,7 @@
                                         <div class="text-xs text-gray-400">Hệ thống</div>
                                     </div>
                                 </div>
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -1064,8 +1064,16 @@
             const box = document.getElementById('dashSearchSuggestions');
             const list = document.getElementById('dashSearchSuggestionList');
             let items = []; let activeIndex = -1; let timer;
-
-            function showBox(){ box.classList.remove('hidden'); }
+            function updatePosition(){
+                const r = input.getBoundingClientRect();
+                box.style.position = 'fixed';
+                box.style.left = r.left + 'px';
+                box.style.top = r.bottom + 'px';
+                box.style.width = r.width + 'px';
+                box.style.zIndex = '99999';
+                box.style.pointerEvents = 'auto';
+            }
+            function showBox(){ updatePosition(); box.classList.remove('hidden'); }
             function hideBox(){ box.classList.add('hidden'); activeIndex = -1; }
             function clearList(){ list.innerHTML = ''; items = []; activeIndex = -1; }
 
@@ -1169,6 +1177,20 @@
             });
 
             document.addEventListener('click', function(e){ if (!box.contains(e.target) && e.target !== input) hideBox(); });
+            window.addEventListener('resize', updatePosition);
+            window.addEventListener('scroll', updatePosition, true);
+
+            // Submit fallback: navigate to first sidebar link containing the query
+            form.addEventListener('submit', function(e){
+                const q = (input.value || '').trim().toLowerCase();
+                if (!q) return;
+                const links = document.querySelectorAll('aside.sidebar a');
+                for (const a of links) {
+                    const label = (a.textContent || '').trim().toLowerCase();
+                    const href = a.getAttribute('href') || '#';
+                    if (label.includes(q) && href !== '#') { e.preventDefault(); window.location.href = href; return; }
+                }
+            });
         })();
 </body>
 </html>

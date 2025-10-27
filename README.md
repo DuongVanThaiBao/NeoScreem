@@ -1,66 +1,135 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# NeoScreem Cinema Management Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+NeoScreem là hệ thống quản trị rạp phim xây dựng trên Laravel, cung cấp giao diện tối (dark theme) cùng bộ công cụ quản lý phim, lịch chiếu, nhân sự, marketing và cài đặt hệ thống. Tài liệu này tổng hợp sơ đồ kiến trúc, các module Admin và cách vận hành dự án.
 
-## About Laravel
+## Mục lục
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+1. [Tổng quan & sơ đồ module](#tổng-quan--sơ-đồ-module)
+2. [Bảng chức năng chi tiết](#bảng-chức-năng-chi-tiết)
+3. [Phân tầng MVC](#phân-tầng-mvc)
+4. [Lưu trữ dữ liệu](#lưu-trữ-dữ-liệu)
+5. [Khởi chạy dự án](#khởi-chạy-dự-án)
+6. [Tài khoản quản trị](#tài-khoản-quản-trị)
+7. [Kiểm thử & tiện ích](#kiểm-thử--tiện-ích)
+8. [Lộ trình & ghi chú](#lộ-trình--ghi-chú)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tổng quan & sơ đồ module
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+```
+NeoScreem Admin Portal
+└─ Trang chủ & Tổng quan
+   ├─ Dashboard bán lẻ (RetailPulse)
+   ├─ Điều hướng nhanh tới module con
+└─ Quản lý cửa hàng (Stores)
+└─ Quản lý phim (Movies)
+└─ Quản lý người dùng (Users)
+└─ Đơn hàng & Suất chiếu (Orders)
+└─ Marketing
+   ├─ Chiến dịch
+   ├─ Phân tích
+   └─ Nhắm mục tiêu khách hàng
+└─ Nhân sự (HR)
+   ├─ Nhân viên
+   ├─ Lịch làm việc
+   └─ Báo cáo nhân sự
+└─ Hệ thống
+   ├─ Cài đặt
+   ├─ Bảo mật
+   ├─ Sao lưu
+   └─ Nhật ký hệ thống
+└─ API & tiện ích nội bộ (reset stats, test data)
+```
 
-## Learning Laravel
+Tất cả route `/admin/*` được bảo vệ bởi middleware `auth` và điều hướng từ sidebar trong `resources/views/admin/admin.blade.php`.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Bảng chức năng chi tiết
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+| Nhóm | Routes chính | Controller | View/Thư mục |
+| --- | --- | --- | --- |
+| Trang chủ Admin | `GET /admin` | `Admin\StatisticsController@adminHome` | `resources/views/admin/admin.blade.php` |
+| Dashboard RetailPulse | `GET /admin/dashboard` | `Admin\StatisticsController@dashboard` | `resources/views/admin/dashboard.blade.php` |
+| Cửa hàng | `GET/PUT /admin/stores` | `Admin\StoreController@index/update` | `resources/views/admin/stores.blade.php` |
+| Phim | `GET/POST/PUT/DELETE /admin/movies...` | `Admin\MovieController` | `resources/views/admin/movies*.blade.php` |
+| Người dùng | `GET/PUT/DELETE /admin/users...` | `Admin\UsersController` | `resources/views/admin/users/*.blade.php` |
+| Đơn hàng & Suất chiếu | `GET /admin/orders` | `Admin\OrdersController@index` | `resources/views/admin/orders.blade.php` |
+| Marketing – Campaigns | `GET /admin/marketing/campaigns` | `Admin\MarketingController@campaigns` | `resources/views/admin/marketing/campaigns.blade.php` |
+| Marketing – Analytics | `GET /admin/marketing/analytics` | `Admin\MarketingController@analytics` | `resources/views/admin/marketing/analytics.blade.php` |
+| Marketing – Targets | `GET/POST /admin/marketing/targets...` | `Admin\MarketingController@targets/storeSegment/exportSegment` | `resources/views/admin/marketing/targets.blade.php` |
+| HR – Nhân viên | `Route::resource('admin/hr/employees')` | `Admin\EmployeeController` | `resources/views/admin/hr/employee-*.blade.php` |
+| HR – Lịch làm việc | `GET/POST /admin/hr/schedules` | `Admin\ScheduleController` | `resources/views/admin/hr/schedules.blade.php` |
+| HR – Báo cáo | `GET .../reports` + export | `Admin\HrReportsController` | `resources/views/admin/hr/reports*.blade.php` |
+| Hệ thống – Cài đặt | `GET/PUT /admin/system/settings` | Closure (`web.php`) | `resources/views/admin/system/settings.blade.php` |
+| Hệ thống – Bảo mật | `GET/PUT /admin/system/security` | Closure (`web.php`) | `resources/views/admin/system/security.blade.php` |
+| Hệ thống – Sao lưu | `GET/POST /admin/system/backup...` | Closure (`web.php`) | `resources/views/admin/system/backup.blade.php` |
+| Hệ thống – Nhật ký | `GET/POST /admin/system/logs...` | Closure (`web.php`) | `resources/views/admin/system/logs.blade.php` |
+| API nội bộ thống kê | `/admin/api/statistics`, `/test-update-stats`, `/reset-stats`, ... | `Admin\StatisticsController` + closures | N/A (JSON) |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## Phân tầng MVC
 
-## Laravel Sponsors
+### Controllers
+- `App\Http\Controllers\Admin\*` cho từng module: Movies, Users, Orders, Marketing, HR, Store, Statistics.
+- `App\Http\Controllers\Auth\*` xử lý đăng nhập/đăng ký/reset.
+- `HomeController` cho trang client `/home`.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Models
+- `User`, `Admin`, `Employee`, `Schedule`, `Statistics`, `Segment`, `ReportSchedule`, `ReportTemplate` (Eloquent models).
+- Dữ liệu phim hiện lưu bằng JSON (chưa có model Eloquent riêng).
 
-### Premium Partners
+### Views
+- `resources/views/admin/...` chứa toàn bộ giao diện quản trị (tách theo module).
+- `resources/views/auth/...` cho trang đăng nhập đăng ký.
+- `resources/views/home.blade.php`, `welcome.blade.php` cho phía client.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Routes
+- Định nghĩa trong `routes/web.php` với nhóm `Route::middleware(['auth'])` cho Admin, kèm các tiện ích API và test.
 
-## Contributing
+## Lưu trữ dữ liệu
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Phim**: `storage/app/movies.json` – seed 5 phim mẫu, thêm mới gán ID nhỏ nhất chưa dùng, lưu các trường `rating`, `tickets_sold`, `revenue`.
+- **Cài đặt hệ thống**: `storage/app/settings.json` (thông tin rạp, giờ hoạt động, giá vé).
+- **Chính sách bảo mật**: `storage/app/security.json` (policy mật khẩu, 2FA, IP whitelist...).
+- **Sao lưu**: `storage/app/backups/*.zip` – tạo qua `/admin/system/backup/create`.
+- **Log**: `storage/logs/laravel.log`, quản lý qua trang Nhật ký hệ thống.
 
-## Code of Conduct
+## Khởi chạy dự án
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+git clone https://github.com/<your-org>/NeoScreem.git
+cd NeoScreem
+cp .env.example .env
+composer install
+php artisan key:generate
+php artisan migrate          # nếu sử dụng database
+php artisan storage:link     # để truy cập storage qua public
+npm install && npm run build # hoặc npm run dev trong quá trình phát triển
+php artisan serve
+```
 
-## Security Vulnerabilities
+## Tài khoản quản trị
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Đăng ký người dùng qua form `/register`, sau đó cập nhật cột `role` thành `admin` (nếu database có cột).
+2. Hoặc tạo nhanh bằng `php artisan tinker`:
+   ```php
+   \App\Models\User::create([
+       'name' => 'Admin',
+       'email' => 'admin@example.com',
+       'password' => bcrypt('secret'),
+       'role' => 'admin',
+   ]);
+   ```
 
-## License
+## Kiểm thử & tiện ích
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- Các route `/test-update-stats`, `/reset-stats`, `/reset-all-stats` đóng vai trò tiện ích để giả lập dữ liệu dashboard.
+- Trang Admin hiển thị flash message nổi (z-index cao) để thông báo thao tác thành công.
+- Script “Onboarding Protection” chặn script lạ được nhúng vào khu vực admin.
+
+## Lộ trình & ghi chú
+
+- Tích hợp module đặt vé thực tế để cập nhật `tickets_sold` và `revenue` cho từng phim.
+- (Tuỳ chọn) Tạo Eloquent model cho Movies thay vì JSON.
+- Hoàn thiện phân quyền vai trò (role) và phân cấp người dùng nếu cần.
+
+---
+
+NeoScreem phát triển trên Laravel, sử dụng giấy phép MIT giống framework nền tảng. Mọi đóng góp vui lòng tạo Pull Request hoặc liên hệ đội phát triển.
