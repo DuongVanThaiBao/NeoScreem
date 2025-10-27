@@ -4,7 +4,6 @@
 <head>
     <meta charset="utf-8" />
     <title>Xác minh tài khoản</title>
-    <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
@@ -13,16 +12,8 @@
             darkMode: "class",
             theme: {
                 extend: {
-                    colors: {
-                        "primary": "#0d6efd", // Màu xanh dương giống Bootstrap
-                        "background-dark": "#121212",
-                    },
-                    fontFamily: {
-                        "display": ["Plus Jakarta Sans", "sans-serif"]
-                    },
-                    borderRadius: {
-                        "xl": "1rem",
-                    },
+                    colors: { primary: "#0d6efd", "background-dark": "#121212" },
+                    fontFamily: { display: ["Plus Jakarta Sans", "sans-serif"] },
                 },
             },
         }
@@ -37,88 +28,43 @@
         </div>
 
         <div class="relative z-10 flex flex-col items-center justify-center min-h-screen p-4">
-
             <div class="w-full max-w-md p-8 space-y-6 bg-black/40 border border-white/10 rounded-xl shadow-2xl backdrop-blur-lg">
-
                 <div class="text-center">
-                    <h2 class="text-3xl font-bold tracking-tight text-white">🔐 Xác minh tài khoản</h2>
+                    <h2 class="text-3xl font-bold">🔐 Xác minh tài khoản</h2>
                     <p class="mt-2 text-sm text-white/70">
-                        Chúng tôi đã gửi mã xác minh đến email:<br>
-                        <strong class="font-semibold text-white/90">{{ $email }}</strong>
+                        Mã xác minh đã được gửi đến email:<br>
+                        <strong>{{ $email ?? 'Không xác định' }}</strong>
                     </p>
                 </div>
+
                 @if(session('error'))
-                <div class="p-4 text-sm text-red-200 bg-red-500/20 rounded-lg" role="alert">{{ session('error') }}</div>
+                    <div class="p-3 text-sm text-red-100 bg-red-600 rounded-lg">{{ session('error') }}</div>
+                @endif
+                @if(session('success'))
+                    <div class="p-3 text-sm text-green-100 bg-green-600 rounded-lg">{{ session('success') }}</div>
                 @endif
 
-                <form method="POST" action="{{ route('verify.check') }}" class="space-y-6" x-data="{ 
-                    timer: 60,
-                    resendDisabled: true,
-                    startTimer() {
-                        this.resendDisabled = true;
-                        this.timer = 60;
-                        const interval = setInterval(() => {
-                            if (this.timer > 0) {
-                                this.timer--;
-                            } else {
-                                clearInterval(interval);
-                                this.resendDisabled = false;
-                            }
-                        }, 1000);
-                    }
-                }" x-init="startTimer()">
+                <form method="POST" action="{{ route('verify.submit') }}" class="space-y-4">
                     @csrf
                     <input type="hidden" name="email" value="{{ $email }}">
-
-                    <div x-data="{
-                        code: Array(6).fill(''),
-                        handleInput(index, event) {
-                            const value = event.target.value;
-                            if (/^[0-9]$/.test(value)) {
-                                this.code[index - 1] = value;
-                                if (index < 6) {
-                                    event.target.nextElementSibling.focus();
-                                }
-                            } else if (value === '') {
-                                this.code[index - 1] = '';
-                            } else {
-                                event.target.value = this.code[index-1] || '';
-                            }
-                        },
-                        handleKeydown(index, event) {
-                            if (event.key === 'Backspace' && event.target.value === '') {
-                                if (index > 1) {
-                                   event.target.previousElementSibling.focus();
-                                }
-                            }
-                        }
-                    }">
-                        <input type="hidden" name="code" x-bind:value="code.join('')">
-
-                        <div class="flex justify-center gap-3">
-                            <template :key="i" x-for="i in 6">
-                                <input type="text" maxlength="1" class="w-12 h-14 text-center text-2xl font-semibold bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-200" x-model="code[i-1]" @input.debounce.1ms="handleInput(i, $event)" @keydown="handleKeydown(i, $event)">
-                            </template>
-                        </div>
-                    </div>
-
                     <div>
-                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary focus:ring-offset-background-dark transition-colors duration-200">
-                            Xác minh
-                        </button>
+                        <label for="code" class="block text-sm mb-1">Nhập mã xác minh</label>
+                        <input type="text" name="code" id="code"
+                            class="w-full rounded-lg border-gray-300 text-black focus:ring-primary focus:border-primary" required autofocus>
                     </div>
-
-                    <div class="text-center">
-                        <div class="flex items-center justify-center space-x-2 text-sm text-white/60">
-                            <a href="{{ route('verify.send', ['email' => $email]) }}" @click.prevent="if (!resendDisabled) { startTimer(); window.location.href=$el.href }" :class="{'opacity-50 cursor-not-allowed': resendDisabled, 'hover:text-primary': !resendDisabled}" class="font-medium underline transition-colors duration-200">
-                                Gửi lại mã
-                            </a>
-                            <template x-if="resendDisabled">
-                                <span class="font-medium" x-text="`trong 0:${timer.toString().padStart(2, '0')}`"></span>
-                            </template>
-                        </div>
-                    </div>
+                    <button type="submit"
+                        class="w-full py-2 font-semibold text-white bg-primary rounded-lg hover:bg-blue-700 transition">
+                        Xác minh
+                    </button>
                 </form>
+
+                <div class="text-sm text-center text-white/70">
+                    Chưa nhận được mã?
+                    <a href="{{ route('verify.send', ['email' => $email]) }}"
+                       class="text-primary font-semibold hover:underline">
+                        Gửi lại mã
+                    </a>
+                </div>
             </div>
         </div>
     </div>

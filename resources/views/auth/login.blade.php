@@ -36,12 +36,7 @@
     }
   </script>
 </head>
-{{-- Hiển thị thông báo thành công sau khi xác minh email --}}
-@if (session('success'))
-    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
-        <span class="font-medium">Success!</span> {{ session('success') }}
-    </div>
-@endif
+
 <body class="bg-background-dark font-display text-gray-200">
   <div class="relative flex min-h-screen w-full">
     <div class="hidden lg:block w-1/2 relative overflow-hidden">
@@ -82,7 +77,13 @@
             {{ $errors->first() }}
           </div>
         @endif
+        {{-- Hiển thị thông báo thành công sau khi xác minh email --}}
+            @if (session('success'))
+                <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+                    <span class="font-medium">Success!</span> {{ session('success') }}
+                </div>
 
+            @endif
         <form action="{{ route('login') }}" method="POST">
           @csrf
           <div class="bg-black/30 backdrop-blur-xl p-8 rounded-2xl shadow-2xl space-y-6 border border-white/10">
