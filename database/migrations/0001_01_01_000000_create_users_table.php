@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email')->unique(); // email duy nhất
             $table->timestamp('email_verified_at')->nullable(); // xác thực email
             $table->string('password'); // mật khẩu
+            $table->string('avatar')->nullable(); // avatar người dùng
             $table->string('role')->default('user'); // phân quyền: user/admin
             $table->rememberToken(); // token "remember me"
             $table->timestamps(); // created_at + updated_at
