@@ -86,26 +86,8 @@
                 </div>
                 <div class="flex items-center gap-4">
                     <div class="hidden md:flex items-center">
-                                {{-- Form trỏ đến route 'movie.search' bằng phương thức GET --}}
-                                <form action="{{ route('movie.search') }}" method="GET" class="relative"> 
-                                    <label class="relative">
-                                        {{-- Icon tìm kiếm --}}
-                                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-                                            <svg fill="currentColor" height="20" viewBox="0 0 256 256" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg>
-                                        </span>
-                                        {{-- Ô nhập liệu với name="keyword" --}}
-                                        <input 
-                                            name="keyword" 
-                                            class="form-input w-full rounded-lg text-white focus:outline-0 focus:ring-2 focus:ring-primary border-gray-700 bg-gray-800 focus:border-primary h-10 placeholder:text-gray-500 px-4 pl-10 text-sm font-normal" 
-                                            placeholder="Tìm kiếm phim..." 
-                                            type="search" 
-                                            required {{-- Thêm required nếu muốn bắt buộc nhập --}}
-                                        />
-                                    </label>
-                                    {{-- Nút submit ẩn (để nhấn Enter là gửi form) --}}
-                                    <button type="submit" class="hidden"></button>
-                                </form>
-                            </div>
+                        <label class="relative"><span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400 dark:text-gray-500"><svg fill="currentColor" height="20" viewBox="0 0 256 256" width="20" xmlns="http://www.w3.org/2000/svg"><path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path></svg></span><input class="form-input w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-gray-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 focus:border-primary h-10 placeholder:text-gray-400 dark:placeholder:text-gray-500 px-4 pl-10 text-sm font-normal" placeholder="Search movies..." type="search" /></label>
+                    </div>
                     
                     <div class="hidden lg:flex items-center">
                         @auth
@@ -191,75 +173,169 @@
             </div>
         </div>
 
-        <main class="py-4">
-            @yield('content')
-        </main>
-        
-        <footer class="bg-gray-100 dark:bg-gray-900/50 border-t border-gray-200 dark:border-gray-800/50 mt-auto">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12"><div class="grid grid-cols-2 md:grid-cols-5 gap-8 text-center md:text-left"><a class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary" href="#">Introduction</a><a class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary" href="#">Terms</a><a class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary" href="#">Customer Care</a><a class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary" href="#">Connection</a><a class="text-sm text-gray-600 dark:text-gray-400 hover:text-primary" href="#">Download App</a></div><div class="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col sm:flex-row justify-between items-center"><p class="text-sm text-gray-500 dark:text-gray-400">© 2025 NeoScreem. All rights reserved.</p><div class="flex gap-4 mt-4 sm:mt-0"><a class="text-gray-400 hover:text-primary" href="#"><svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm8,191.63V152h24a8,8,0,0,0,0-16H136V112a16,16,0,0,1,16-16h16a8,8,0,0,0,0-16H152a32,32,0,0,0-32,32v24H96a8,8,0,0,0,0,16h24v63.63a88,88,0,1,1,16,0Z"></path></svg></a><a class="text-gray-400 hover:text-primary" href="#"><svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M247.39,68.94A8,8,0,0,0,240,64H209.57A48.66,48.66,0,0,0,168.1,40a46.91,46.91,0,0,0-33.75,13.7A47.9,47.9,0,0,0,120,88v6.09C79.74,83.47,46.81,50.72,46.46,50.37a8,8,0,0,0-13.65,4.92c-4.31,47.79,9.57,79.77,22,98.18a110.93,110.93,0,0,0,21.88,24.2c-15.23,17.53-39.21,26.74-39.47,26.84a8,8,0,0,0-3.85,11.93c.75,1.12,3.75,5.05,11.08,8.72C53.51,229.7,65.48,232,80,232c70.67,0,129.72-54.42,135.75-124.44l29.91-29.9A8,8,0,0,0,247.39,68.94Zm-45,29.41a8,8,0,0,0-2.32,5.14C196,166.58,143.28,216,80,216c-10.56,0-18-1.4-23.22-3.08,11.51-6.25,27.56-17,37.88-32.48A8,8,0,0,0,92,169.08c-.47-.27-43.91-26.34-44-96,16,13,45.25,33.17,78.67,38.79A8,8,0,0,0,136,104V88a32,32,0,0,1,9.6-22.92A30.94,30.94,0,0,1,167.9,56c12.66.16,24.49,7.88,29.44,19.21A8,8,0,0,0,204.67,80h16Z"></path></svg></a><a class="text-gray-400 hover:text-primary" href="#"><svg fill="currentColor" height="24" viewBox="0 0 256 256" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160ZM176,24H80A56.06,56.06,0,0,0,24,80v96a56.06,56.06,0,0,0,56,56h96a56.06,56.06,0,0,0,56-56V80A56.06,56.06,0,0,0,176,24Zm40,152a40,40,0,0,1-40,40H80a40,40,0,0,1-40-40V80A40,40,0,0,1,80,40h96a40,40,0,0,1,40,40ZM192,76a12,12,0,1,1-12-12A12,12,0,0,1,192,76Z"></path></svg></a></div></div>
-            </div>
-        </footer>
-    </div>
-    
-    <div id="trailer-modal" class="fixed inset-0 z-[101] bg-black/80 backdrop-blur-sm items-center justify-center hidden">
-        <div class="relative w-full max-w-3xl">
-            <button id="close-modal-btn" class="absolute -top-10 -right-2 text-white text-4xl">&times;</button>
-            <div class="aspect-video">
-                <iframe id="trailer-iframe" class="w-full h-full" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-        </div>
-    </div>
-    
+        <main>
+            <section class="relative group">
+                <!-- Banner chính -->
+                    <div class="container mx-auto px-4">
+                       <div id="banner-slider" class="relative overflow-hidden w-full h-[580px] rounded-2xl bg-black">
+                            <!-- Nút điều hướng -->
+                            <button id="prev-slide"
+                                class="absolute top-1/2 left-4 z-20 -translate-y-1/2 rounded-full bg-black/40 p-3 text-white backdrop-blur-sm transition opacity-0 group-hover:opacity-100 hover:bg-black/60">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <button id="next-slide"
+                                class="absolute top-1/2 right-4 z-20 -translate-y-1/2 rounded-full bg-black/40 p-3 text-white backdrop-blur-sm transition opacity-0 group-hover:opacity-100 hover:bg-black/60">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                                    stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+
+                            <!-- Nội dung banner -->
+                            <div class="absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+                                <div id="banner-content" class="absolute bottom-0 p-6 md:p-10 z-10">
+                                    <h2 id="banner-title"
+                                        class="text-white text-3xl md:text-5xl font-bold [text-shadow:0_2px_4px_rgba(0,0,0,0.7)]"></h2>
+                                    <p id="banner-description"
+                                        class="text-white/80 mt-3 max-w-2xl [text-shadow:0_1px_3px_rgba(0,0,0,0.7)]"></p>
+                                    <div class="mt-5 flex gap-4">
+                                        <button
+                                            class="min-w-[140px] rounded-lg h-12 px-6 bg-yellow-500 text-black text-sm font-bold hover:bg-yellow-400 transition-colors shadow-md">
+                                            Mua vé
+                                        </button>
+                                        <button
+                                            class="min-w-[140px] rounded-lg h-12 px-6 bg-white/20 text-white text-sm font-bold hover:bg-white/30 backdrop-blur-sm transition-colors">
+                                            Chi tiết
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Dấu chấm điều hướng -->
+                            <div id="banner-dots" class="absolute bottom-3 w-full flex justify-center gap-2"></div>
+                        </div>
+                    </div>
+
+            </section>
+            
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <section class="mb-12 bg-background-light dark:bg-gray-900/50 shadow-lg rounded-xl fade-in-section">
+                    <div class="border-b border-gray-200 dark:border-gray-800"><nav aria-label="Tabs" class="flex -mb-px"><a class="w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm text-primary border-primary" href="#">Buy Tickets by Movie</a><a class="w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700" href="#">Buy Tickets by Theater</a></nav></div>
+                    <div class="p-6"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end"><div class="lg:col-span-1"><select class="form-select w-full rounded-lg h-12 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:ring-primary focus:border-primary"><option>Select Movie</option><option>The Batman: Part II</option><option>Zootopia 2</option><option>The Conjuring: Last Rites</option><option>Dune: Messiah</option></select></div><div class="lg:col-span-1"><select class="form-select w-full rounded-lg h-12 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:ring-primary focus:border-primary"><option>Select Theater</option><option>NeoScreem Crescent Mall</option><option>NeoScreem Landmark 81</option></select></div><div class="lg:col-span-1"><input type="date" class="form-input w-full rounded-lg h-12 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:ring-primary focus:border-primary"></div><div class="lg:col-span-1"><select class="form-select w-full rounded-lg h-12 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:ring-primary focus:border-primary"><option>Showtime</option></select></div><div class="lg:col-span-1"><button class="w-full flex items-center justify-center rounded-lg h-12 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors btn-glow"><span class="truncate">Buy Tickets Now</span></button></div></div></div>
+                </section>
+
+                <section class="mb-12 fade-in-section">
+                    <section class="relative group">
+                </section>
+            
+                        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                            <section class="mb-12 bg-background-light dark:bg-gray-900/50 shadow-lg rounded-xl fade-in-section">
+                                </section>
+                            
+                            <div class="border-b border-gray-800 mb-6">
+                                {{-- THAY ĐỔI: Thêm `justify-center` để căn giữa --}}
+                                <nav class="flex justify-center">
+                                    {{-- THAY ĐỔI: Tăng kích thước chữ và độ đậm --}}
+                                    <h2 data-tab="phim-dang-chieu" class="tab-btn pb-2 border-b-2 text-primary border-primary font-bold transition-colors duration-200 text-2xl md:text-3xl uppercase tracking-wider">
+                                        Movies Showing
+                                    </h2>
+                                </nav>
+                            </div>
+                    <!-- PHIM ĐANG CHIẾU -->
+                        {{-- Div bọc ngoài để định vị các nút bấm --}}
+                        <div class="relative">
+
+                                <div id="phim-sap-chieu" class="hide-scrollbar tab-content mt-5 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 p-2">
+
+                                @foreach($phimSapChieu as $phim)
+                                    {{-- THẺ PHIM ĐÃ ĐƯỢC THÊM CÁC CLASS CHIỀU RỘNG --}}
+                                <div class="atropos group relative flex flex-col h-full cursor-pointer bg-gray-800/50 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-1">                                        
+                                        {{-- Phần atropos scale --}}
+                                          <div class="atropos-scale">
+                                    <div class="atropos-rotate">
+                                        <div class="atropos-inner rounded-lg overflow-hidden relative">
+
+                                            <!-- Poster phim -->
+                                            <img data-atropos-offset="-5"
+                                                src="{{ asset('storage/' . $phim->anh_poster) }}"
+                                                alt="{{ $phim->ten_phim }}"
+                                                class="w-full h-full object-cover aspect-[2/3] transition-transform duration-500 group-hover:scale-110">
+
+                                            <!-- Overlay khi hover -->
+                                            <div data-atropos-offset="0" 
+                                                class="absolute inset-0 flex flex-col items-center justify-center bg-slate-900/85 text-center text-white opacity-0 transition-opacity duration-500 group-hover:opacity-100 sm:p-4">
+
+                                                <h3 class="mb-4 font-bold text-base sm:text-lg line-clamp-2">{{ $phim->ten_phim }}</h3>
+                                                
+                                                <ul class="space-y-2 text-xs sm:text-sm">
+                                                    <li><i class="fa-solid fa-users text-yellow-400"></i> {{ $phim->the_loai ?? 'Đang cập nhật' }}</li>
+                                                    <li><i class="fa-solid fa-clock text-yellow-400"></i> {{ $phim->thoi_luong ?? 'N/A' }} phút</li>
+                                                    <li><i class="fa-solid fa-globe-asia text-yellow-400"></i> {{ $phim->quoc_gia ?? 'N/A' }}</li>
+                                                    <li><i class="fa-solid fa-comment-dots text-yellow-400"></i> {{ $phim->ngon_ngu ?? 'N/A' }}</li>
+                                                </ul>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                       <div class="p-3 text-center bg-gray-900">
+                                    <p class="text-xs text-gray-400">
+                                        Khởi chiếu: 
+                                        {{ $phim->ngay_khoi_chieu ? \Carbon\Carbon::parse($phim->ngay_khoi_chieu)->format('d/m/Y') : 'N/A' }}
+                                    </p>
+                                    <h3 class="mt-1 font-bold text-white text-base leading-tight line-clamp-2">
+                                        <a href="#" class="hover:text-yellow-400 transition-colors">
+                                            {{ $phim->ten_phim }}
+                                        </a>
+                                    </h3>
+                                    <div class="mt-2 flex justify-center gap-3">
+                                        <button class="trailer-btn flex items-center gap-2 text-sm text-gray-300 hover:text-white" 
+                                                data-trailer-id="{{ $phim->trailer_id ?? '' }}">
+                                            <i class="fa-solid fa-play text-yellow-400"></i> Trailer
+                                        </button>
+                                        <a href="#" class="rounded bg-yellow-400 px-3 py-1 text-xs font-bold text-black hover:bg-yellow-500">
+                                            TÌM HIỂU THÊM
+                                        </a>
+                                    </div>
+                                </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                </section>                
+            
+                
+                @guest
+          <section class="mb-12 fade-in-section">
+              <div class="bg-gradient-to-r from-primary via-red-600 to-red-800 dark:from-primary dark:to-red-900 rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 animated-gradient">
+                  <div class="text-white text-center md:text-left">
+                      <h2 class="text-3xl font-bold">Become a NeoScreem Member!</h2>
+                      <p class="mt-2 opacity-80">Earn points, get exclusive discounts, and enjoy special birthday offers. Join now for free!</p>
+                  </div>
+                        <form action="{{ route('login') }}" method="GET">
+                            <button type="submit"
+                                class="flex-shrink-0 min-w-[150px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-white text-primary text-sm font-bold hover:bg-gray-200 transition-colors">
+                                Sign Up Now
+                            </button>
+                        </form>             
+                    </div>
+          </section>
+          @endguest
     <button id="back-to-top" class="fixed bottom-5 right-5 z-50 p-3 rounded-full bg-primary text-white shadow-lg hover:bg-primary/90 transition-opacity duration-300 opacity-0 btn-glow">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg>
     </button>
     <script src="https://cdn.jsdelivr.net/npm/atropos@2/atropos.min.js"></script>
-    {{-- <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const slider = document.getElementById('phim-dang-chieu');
-        const prevBtn = document.getElementById('pdc-prev-btn');
-        const nextBtn = document.getElementById('pdc-next-btn');
-
-        if (slider && prevBtn && nextBtn) {
-            // Lấy chiều rộng 1 thẻ phim (tạm lấy thẻ đầu tiên)
-            const cardWidth = slider.querySelector('.atropos')?.offsetWidth || 250;
-            const scrollAmount = cardWidth * 2; // Cuộn 2 thẻ mỗi lần
-
-            nextBtn.addEventListener('click', () => {
-                slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-            });
-
-            prevBtn.addEventListener('click', () => {
-                slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-            });
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-        const slider = document.getElementById('phim-sap-chieu');
-        const prevBtn = document.getElementById('psc-prev-btn');
-        const nextBtn = document.getElementById('psc-next-btn');
-
-        if (slider && prevBtn && nextBtn) {
-            // Lấy chiều rộng 1 thẻ phim (tạm lấy thẻ đầu tiên)
-            const cardWidth = slider.querySelector('.atropos')?.offsetWidth || 250;
-            const scrollAmount = cardWidth * 2; // Cuộn 2 thẻ mỗi lần
-
-            nextBtn.addEventListener('click', () => {
-                slider.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-            });
-
-            prevBtn.addEventListener('click', () => {
-                slider.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
-            });
-        }
-    });
-    </script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
     // --- SLIDER ---
     const slides = [
-            @foreach($phimDangChieu as $phim)
+            @foreach($phimSapChieu as $phim)
                 {
                     title: `{!! addslashes($phim->ten_phim) !!}`,
                     description: `{!! addslashes(Str::limit($phim->tom_tat, 150)) !!}`,
@@ -461,6 +537,6 @@
     }
 });
 
-</script> --}}
+</script>
 </body>
 </html>
