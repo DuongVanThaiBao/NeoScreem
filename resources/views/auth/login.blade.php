@@ -36,22 +36,6 @@
     }
   </script>
 </head>
-<<<<<<< HEAD
-
-<body class="bg-background-dark font-display text-gray-200">
-  <div class="relative flex min-h-screen w-full">
-    <div class="hidden lg:block w-1/2 relative overflow-hidden">
-      <img alt="Movie poster" class="h-full w-full object-cover poster-animation" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCacZICYIvSqThWEbtHePVzwBl3-gH3m19WgkMBGVlPmjhFbVzm5S1KVji5pLiFo-b2u65WUaxHJrEEL0ES3l69hFht7TpQO33YzORVgvycM8jkFGUhwXFH9NzBSCexXlhSvyA7fQpBRBcQsF4aCUlJsaUIuaw7OdkVKN2HwQx50wU46XTfZf5BR1kKP_9uhuLYG3vTidAgz6HmAHaTVwmsBNAVBKhlUVVCFVH4A5IURoLMDazWcmuU28pvGsOQuUmRoVhI1MPm8JM2"/>
-      <div class="absolute inset-0 bg-gradient-to-r from-background-dark/80 via-background-dark/50 to-transparent"></div>
-    </div>
-
-    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative">
-      <div class="absolute inset-0 lg:hidden">
-        <img alt="Movie poster" class="h-full w-full object-cover opacity-20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYK4AefWvKgJ967HcSqZhBb7Gmj9mxCx9icZynkUEvd0gSrCw7O0VDfFjWS61MSWH3fSoZitnyRf6voRVINDDUbfwWVe_BDO8yvxxUXrAILLUfmdNmHq6nI4N0bYE_Xe3Jb66gA3EVfdefIhii1GNuejXySCO2IkoYm2Hm-kE2fK2x4x-uObwMGoifU0dvgYH-bZ1zI5uT1AL17F2zT4D_LVon-fNuLzBPgTfORRHd84kGkj6SKXLLlLPJCdaGjtAP3w4K4F8sGiiR"/>
-        <div class="absolute inset-0 bg-background-dark/80"></div>
-      </div>
-
-=======
 {{-- Hiển thị thông báo thành công sau khi xác minh email --}}
 @if (session('success'))
     <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
@@ -87,7 +71,6 @@
     </div>
 
     <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative">
->>>>>>> hotfix/route
       <div class="relative z-10 w-full max-w-md">
         <div class="flex items-center gap-3 mb-8 justify-center lg:justify-start">
           <div class="w-10 h-10 text-primary">
@@ -115,17 +98,7 @@
             {{ $errors->first() }}
           </div>
         @endif
-<<<<<<< HEAD
-        {{-- Hiển thị thông báo thành công sau khi xác minh email --}}
-            @if (session('success'))
-                <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
-                    <span class="font-medium">Success!</span> {{ session('success') }}
-                </div>
-
-            @endif
-=======
-
->>>>>>> hotfix/route
+        
         <form action="{{ route('login') }}" method="POST">
           @csrf
           <div class="bg-black/30 backdrop-blur-xl p-8 rounded-2xl shadow-2xl space-y-6 border border-white/10">

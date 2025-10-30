@@ -47,14 +47,9 @@
 <body class="bg-background-dark font-display text-gray-200">
 
 <div class="relative min-h-screen flex items-center justify-center lg:justify-start">
-<<<<<<< HEAD
-    <div class="absolute inset-0 z-10 lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
-        <div class="absolute inset-0 bg-background-dark/80 lg:bg-transparent lg:bg-gradient-to-r from-background-dark via-background-dark/70 to-transparent"></div>
-=======
+
     <div class="absolute inset-0 z-10 w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
         <div class="absolute inset-0 bg-background-dark lg:bg-transparent lg:bg-gradient-to-r from-background-dark via-background-dark/70 to-transparent"></div>
->>>>>>> hotfix/route
-
         <div class="relative z-10 w-full max-w-md">
             <div class="flex items-center gap-3 mb-8 justify-center lg:justify-start">
                 <div class="w-10 h-10 text-primary">
@@ -136,13 +131,6 @@
         </div>
     </div>
 
-<<<<<<< HEAD
-    <div class="absolute inset-0 lg:left-1/2">
-        <div class="h-full w-full overflow-hidden">
-            <img src="{{ asset('storage/banner.jpg') }}"
-                 alt="Movie poster"
-                 class="h-full w-full object-cover poster-animation">
-=======
     <div class="absolute inset-0 lg:left-1/2 hidden lg:block">
         <div class="h-full w-full overflow-hidden">
             <img src="https://m.media-amazon.com/images/M/MV5BYjJkZGUwMDEtYTJiYS00ZTc5LTk3MjQtNjgxODM2NjNmYzhmXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_.jpg"
@@ -173,8 +161,4 @@
 
 <script defer src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"></script>
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> hotfix/route
