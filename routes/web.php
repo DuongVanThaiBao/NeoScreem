@@ -2,10 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
-
 use App\Http\Controllers\Auth\RegisterMsController;
 use App\Http\Controllers\Auth\VerificationController;
-use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\HomeController;
@@ -52,9 +50,7 @@ Route::get('/register', [RegisterMsController::class, 'showRegister'])->name('re
 Route::post('/register', [RegisterMsController::class, 'register']);
 
 // 🔑 ĐĂNG NHẬP / ĐĂNG XUẤT
-Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
 
 // 📨 QUÊN MẬT KHẨU / ĐẶT LẠI MẬT KHẨU
 Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
@@ -64,18 +60,12 @@ Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])-
 Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.store');
 
 // ✅ XÁC MINH EMAIL
-Route::get('/verify/{email}', [VerificationController::class, 'showVerificationForm'])->name('verify.form');
-Route::get('/verify/resend/{email}', [VerificationController::class, 'sendVerificationCode'])->name('verify.send');
-Route::post('/verify', [VerificationController::class, 'verify'])->name('verify.submit');
-
-
 /*
 |--------------------------------------------------------------------------
 | KHU VỰC NGƯỜI DÙNG (YÊU CẦU ĐĂNG NHẬP)
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
 });
 
