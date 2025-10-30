@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
+
 use App\Http\Controllers\Auth\RegisterMsController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\Auth\LoginController;
@@ -63,11 +64,13 @@ Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])-
 Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.store');
 
 // ✅ XÁC MINH EMAIL
-Route::get('/verify/{email}', [VerificationController::class, 'showVerificationForm'])->name('verify.form');
-Route::get('/verify/resend/{email}', [VerificationController::class, 'sendVerificationCode'])->name('verify.send');
+Route::get('/verify', [VerificationController::class, 'showVerificationForm'])->name('verify.form');
+Route::post('/verify', [VerificationController::class, 'verify'])->name('verify.check');
+
+// Gửi mã (ví dụ sau khi đăng ký xong)
+Route::get('/send-code/{email}', [VerificationController::class, 'sendVerificationCode'])->name('verify.send');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::post('/verify', [VerificationController::class, 'verify'])->name('verify.submit');
-
-
 /*
 |--------------------------------------------------------------------------
 | KHU VỰC NGƯỜI DÙNG (YÊU CẦU ĐĂNG NHẬP)
