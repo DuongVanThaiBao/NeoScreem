@@ -3,14 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\RegisterMsController;
+use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PhimController;
 use App\Http\Controllers\ShowtimeController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Auth\VerificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,11 @@ Route::get('/get-times/{phim_id}/{rap_id}', [HomeController::class, 'getTimes'])
 // 💥 KHUYẾN MÃI & SỰ KIỆN
 Route::get('/promotions', [HomeController::class, 'promotionsAndEvents'])->name('promotions.promotions');
 
+/*
+|--------------------------------------------------------------------------
+| XÁC THỰC NGƯỜI DÙNG
+|--------------------------------------------------------------------------
+*/
 
 // 🧍 ĐĂNG KÝ
 
@@ -45,18 +51,6 @@ Route::get('/register', [RegisterMsController::class, 'showRegister'])->name('re
 Route::post('/register', [RegisterMsController::class, 'register']);
 
 // 🔑 ĐĂNG NHẬP / ĐĂNG XUẤT
-Route::get('/verify', [VerificationController::class, 'showVerificationForm'])->name('verify.form');
-Route::post('/verify', [VerificationController::class, 'verify'])->name('verify.check');
-
-// Gửi mã (ví dụ sau khi đăng ký xong)
-Route::get('/send-code/{email}', [VerificationController::class, 'sendVerificationCode'])->name('verify.send');
-Route::get('/', [HomeController::class, 'index'])->name('home');
-
-// Register
-Route::get('/register', [RegisterMsController::class, 'showRegister'])->name('register');
-Route::post('/register', [RegisterMsController::class, 'register']);
-
-// Login / Logout
 Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -69,12 +63,18 @@ Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])-
 Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.store');
 
 // ✅ XÁC MINH EMAIL
+Route::get('/verify/{email}', [VerificationController::class, 'showVerificationForm'])->name('verify.form');
+Route::get('/verify/resend/{email}', [VerificationController::class, 'sendVerificationCode'])->name('verify.send');
+Route::post('/verify', [VerificationController::class, 'verify'])->name('verify.submit');
+
+
 /*
 |--------------------------------------------------------------------------
 | KHU VỰC NGƯỜI DÙNG (YÊU CẦU ĐĂNG NHẬP)
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth')->group(function () {
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
 });
 

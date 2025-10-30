@@ -36,6 +36,7 @@
     }
   </script>
 </head>
+<<<<<<< HEAD
 
 <body class="bg-background-dark font-display text-gray-200">
   <div class="relative flex min-h-screen w-full">
@@ -50,6 +51,43 @@
         <div class="absolute inset-0 bg-background-dark/80"></div>
       </div>
 
+=======
+{{-- Hiển thị thông báo thành công sau khi xác minh email --}}
+@if (session('success'))
+    <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+        <span class="font-medium">Success!</span> {{ session('success') }}
+    </div>
+@endif
+<body class="bg-background-dark font-display text-gray-200">
+  <div class="relative flex min-h-screen w-full">
+    <div class="absolute inset-0 lg:left-1/2 hidden lg:block">
+        <div class="h-full w-full overflow-hidden">
+            <img src="https://m.media-amazon.com/images/M/MV5BYjJkZGUwMDEtYTJiYS00ZTc5LTk3MjQtNjgxODM2NjNmYzhmXkEyXkFqcGdeQXVyMDM2NDM2MQ@@._V1_.jpg"
+                 alt="Movie poster"
+                 class="h-full w-full object-cover poster-animation">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent">
+                <div class="absolute bottom-0 p-8 md:p-10 z-10 w-full">
+                    <h2 class="text-white text-3xl md:text-5xl font-bold [text-shadow:0_2px_4px_rgba(0,0,0,0.7)]">
+                        Phim Chiếu Rạp Mới
+                    </h2>
+                    <p class="text-white/80 mt-3 max-w-2xl text-base md:text-lg [text-shadow:0_1px_3px_rgba(0,0,0,0.7)]">
+                        Khám phá những bộ phim bom tấn đang được chiếu tại rạp với trải nghiệm âm thanh và hình ảnh tuyệt vời
+                    </p>
+                    <div class="mt-6 flex gap-4">
+                        <button class="px-6 py-3 bg-primary text-white text-sm font-bold rounded-lg hover:bg-primary/90 transition-colors shadow-md">
+                            Xem Ngay
+                        </button>
+                        <button class="px-6 py-3 bg-white/20 text-white text-sm font-bold rounded-lg hover:bg-white/30 backdrop-blur-sm transition-colors">
+                            Tìm Hiểu Thêm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 relative">
+>>>>>>> hotfix/route
       <div class="relative z-10 w-full max-w-md">
         <div class="flex items-center gap-3 mb-8 justify-center lg:justify-start">
           <div class="w-10 h-10 text-primary">
@@ -77,6 +115,7 @@
             {{ $errors->first() }}
           </div>
         @endif
+<<<<<<< HEAD
         {{-- Hiển thị thông báo thành công sau khi xác minh email --}}
             @if (session('success'))
                 <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
@@ -84,6 +123,9 @@
                 </div>
 
             @endif
+=======
+
+>>>>>>> hotfix/route
         <form action="{{ route('login') }}" method="POST">
           @csrf
           <div class="bg-black/30 backdrop-blur-xl p-8 rounded-2xl shadow-2xl space-y-6 border border-white/10">
@@ -155,4 +197,8 @@
     });
   </script>
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> hotfix/route
