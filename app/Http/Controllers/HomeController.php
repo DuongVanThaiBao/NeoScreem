@@ -29,12 +29,14 @@ class HomeController extends Controller
     public function showing()
     {
         $phimDangChieu = Phim::where('trang_thai', 'Đang chiếu')->get();
-        return view('movie.showing', compact('phimDangChieu'));
+        $movies = Phim::where('trang_thai', 'Đang chiếu')->get();
+        return view('movie.showing', compact('phimDangChieu', 'movies'));
     }
 
     public function upcoming()
     {
         $phimSapChieu = Phim::where('trang_thai', 'Sắp chiếu')->get();
-        return view('movie.upcoming', compact('phimSapChieu'));
+        $movies = Phim::where('trang_thai', 'Sắp chiếu')->get();
+        return view('movie.upcoming', compact('phimSapChieu', 'movies'));
     }
 }

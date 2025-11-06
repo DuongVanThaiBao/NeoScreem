@@ -304,7 +304,7 @@
                                 <nav class="flex justify-center">
                                     {{-- THAY ĐỔI: Tăng kích thước chữ và độ đậm --}}
                                     <h2 data-tab="phim-dang-chieu" class="tab-btn pb-2 border-b-2 text-primary border-primary font-bold transition-colors duration-200 text-2xl md:text-3xl uppercase tracking-wider">
-                                        Movies Showing
+                                        Phim Đang Chiếu
                                     </h2>
                                 </nav>
                             </div>
@@ -400,7 +400,7 @@
                                 <nav class="flex justify-center">
                                     {{-- THAY ĐỔI: Tăng kích thước chữ và độ đậm --}}
                                     <h2 data-tab="phim-dang-chieu" class="tab-btn pb-2 border-b-2 text-primary border-primary font-bold transition-colors duration-200 text-2xl md:text-3xl uppercase tracking-wider">
-                                        Upcoming movie
+                                        Phim Sắp Chiếu
                                     </h2>
                                 </nav>
                             </div>

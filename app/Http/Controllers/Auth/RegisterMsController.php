@@ -8,14 +8,17 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-
+use App\Models\Phim;
 class RegisterMsController extends Controller
 {
     // Show register form
     public function showRegister()
     {
-        return view('auth.register');
+        $phimSapChieu = Phim::where('trang_thai', 'Sắp chiếu')->get();
+        $movies = Phim::where('trang_thai', 'Sắp chiếu')->get();
+        return view('auth.register', compact('phimSapChieu', 'movies'));
     }
+
 
     // Handle registration
     public function register(Request $request)

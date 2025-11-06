@@ -224,10 +224,53 @@
             </section>
             
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <section class="mb-12 bg-background-light dark:bg-gray-900/50 shadow-lg rounded-xl fade-in-section">
-                    <div class="border-b border-gray-200 dark:border-gray-800"><nav aria-label="Tabs" class="flex -mb-px"><a class="w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm text-primary border-primary" href="#">Buy Tickets by Movie</a><a class="w-1/2 py-4 px-1 text-center border-b-2 font-medium text-sm text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-700" href="#">Buy Tickets by Theater</a></nav></div>
-                    <div class="p-6"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 items-end"><div class="lg:col-span-1"><select class="form-select w-full rounded-lg h-12 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:ring-primary focus:border-primary"><option>Select Movie</option><option>The Batman: Part II</option><option>Zootopia 2</option><option>The Conjuring: Last Rites</option><option>Dune: Messiah</option></select></div><div class="lg:col-span-1"><select class="form-select w-full rounded-lg h-12 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:ring-primary focus:border-primary"><option>Select Theater</option><option>NeoScreem Crescent Mall</option><option>NeoScreem Landmark 81</option></select></div><div class="lg:col-span-1"><input type="date" class="form-input w-full rounded-lg h-12 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:ring-primary focus:border-primary"></div><div class="lg:col-span-1"><select class="form-select w-full rounded-lg h-12 text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-700 focus:ring-primary focus:border-primary"><option>Showtime</option></select></div><div class="lg:col-span-1"><button class="w-full flex items-center justify-center rounded-lg h-12 px-4 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-colors btn-glow"><span class="truncate">Buy Tickets Now</span></button></div></div></div>
-                </section>
+                 <div class="p-8">
+                        
+                        <h2 class="text-2xl font-bold text-center text-primary dark:text-primary-light mb-8">
+                            MUA VÉ THEO PHIM 
+                        </h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 items-end">
+
+                            <div>
+                                <label for="phim" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Chọn phim</label>
+                                <select id="phim" class="form-select w-full rounded-lg h-12 border-gray-300 dark:border-gray-700 dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary">
+                                    <option value="">🎬 Chọn phim</option>
+                                    @foreach($movies as $movie)
+                                        <option value="{{ $movie->id }}">{{ $movie->ten_phim }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="rap" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Chọn rạp</label>
+                                <select id="rap" class="form-select w-full rounded-lg h-12 border-gray-300 dark:border-gray-700 dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-gray-700" disabled>
+                                    <option value="">🏢 Chọn rạp</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="ngay" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Chọn ngày</label>
+                                <select id="ngay" class="form-select w-full rounded-lg h-12 border-gray-300 dark:border-gray-700 dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-gray-700" disabled>
+                                    <option value="">🏢 Chọn ngày</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label for="gio" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Chọn giờ chiếu</label>
+                                <select id="gio" class="form-select w-full rounded-lg h-12 border-gray-300 dark:border-gray-700 dark:bg-gray-800 focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50 disabled:bg-gray-100 dark:disabled:bg-gray-700" disabled>
+                                    <option value="">🕒 Chọn giờ chiếu</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <button id="muaVe" class="w-full rounded-lg h-12 bg-primary text-white font-bold hover:bg-primary/90 transition focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-gray-900 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                     ĐẶT TRƯỚC VÉ XEM PHIM
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
 
                 <section class="mb-12 fade-in-section">
                     <section class="relative group">
@@ -242,7 +285,7 @@
                                 <nav class="flex justify-center">
                                     {{-- THAY ĐỔI: Tăng kích thước chữ và độ đậm --}}
                                     <h2 data-tab="phim-dang-chieu" class="tab-btn pb-2 border-b-2 text-primary border-primary font-bold transition-colors duration-200 text-2xl md:text-3xl uppercase tracking-wider">
-                                        Movies UpComing
+                                        PHIM SẮP CHIẾU
                                     </h2>
                                 </nav>
                             </div>
@@ -535,6 +578,111 @@
             scrollRightBtn.addEventListener('click', () => promoContainer.scrollBy({ left: scrollAmount, behavior: 'smooth' }));
         }
     }
+});
+
+    document.addEventListener("DOMContentLoaded", function () {
+    const phimSelect = document.getElementById("phim");
+    const rapSelect = document.getElementById("rap");
+    const ngayInput = document.getElementById("ngay");
+    const gioSelect = document.getElementById("gio");
+    const muaVeBtn = document.getElementById("muaVe");
+
+    // 🟦 Khi chọn phim → tải danh sách rạp
+    phimSelect.addEventListener("change", async function () {
+        const phimId = this.value;
+        rapSelect.innerHTML = `<option value="">🏢 Chọn rạp</option>`;
+        rapSelect.disabled = true;
+        ngayInput.disabled = true;
+        gioSelect.disabled = true;
+        muaVeBtn.disabled = true;
+
+        if (!phimId) return;
+
+        try {
+            const res = await fetch(`/api/theaters/${phimId}`);
+            const data = await res.json();
+
+            if (data.length > 0) {
+                data.forEach(rap => {
+                    rapSelect.innerHTML += `<option value="${rap.id}">${rap.name}</option>`;
+                });
+                rapSelect.disabled = false;
+            }
+        } catch (error) {
+            console.error("Lỗi khi tải danh sách rạp:", error);
+        }
+    });
+
+    // 🟩 Khi chọn rạp → tải ngày chiếu
+    rapSelect.addEventListener("change", async function () {
+        const phimId = phimSelect.value;
+        const rapId = this.value;
+        ngayInput.value = "";
+        gioSelect.innerHTML = `<option value="">🕒 Chọn giờ chiếu</option>`;
+        ngayInput.disabled = true;
+        gioSelect.disabled = true;
+        muaVeBtn.disabled = true;
+
+        if (!phimId || !rapId) return;
+
+        try {
+            const res = await fetch(`/api/dates/${phimId}/${rapId}`);
+            const data = await res.json();
+
+            if (data.length > 0) {
+                ngayInput.disabled = false;
+                data.forEach(rap => {
+                    const option = document.createElement("option");
+                    option.value = rap;
+                    option.textContent = rap;
+                    ngayInput.appendChild(option);
+                });
+            }
+        } catch (error) {
+            console.error("Lỗi khi tải ngày chiếu:", error);
+        }
+    });
+
+    // 🟨 Khi chọn ngày → tải giờ chiếu
+    ngayInput.addEventListener("change", async function () {
+        const phimId = phimSelect.value;
+        const rapId = rapSelect.value;
+        const ngay = this.value;
+        gioSelect.innerHTML = `<option value="">🕒 Chọn giờ chiếu</option>`;
+        gioSelect.disabled = true;
+        muaVeBtn.disabled = true;
+
+        if (!phimId || !rapId || !ngay) return;
+
+        try {
+            const res = await fetch(`/api/times/${phimId}/${rapId}/${ngay}`);
+            const data = await res.json();
+
+            if (data.length > 0) {
+                data.forEach(gio => {
+                    gioSelect.innerHTML += `<option value="${gio}">${gio}</option>`;
+                });
+                gioSelect.disabled = false;
+            }
+        } catch (error) {
+            console.error("Lỗi khi tải giờ chiếu:", error);
+        }
+    });
+
+    // 🟥 Khi chọn giờ → bật nút Mua vé
+    gioSelect.addEventListener("change", function () {
+        muaVeBtn.disabled = !this.value;
+    });
+
+    // 🟦 Nút Mua vé
+    muaVeBtn.addEventListener("click", function () {
+        const phim = phimSelect.options[phimSelect.selectedIndex].text;
+        const rap = rapSelect.options[rapSelect.selectedIndex].text;
+        const ngay = ngayInput.value;
+        const gio = gioSelect.value;
+
+        alert(`🎬 Phim: ${phim}\n🏢 Rạp: ${rap}\n📅 Ngày: ${ngay}\n🕒 Giờ: ${gio}`);
+    });
 });
 
 </script>

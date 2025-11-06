@@ -13,6 +13,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PhimController;
 use App\Http\Controllers\ShowtimeController;
+use Illuminate\Auth\Events\Login;
 
 /*
 |--------------------------------------------------------------------------
@@ -52,6 +53,7 @@ Route::get('/register', [RegisterMsController::class, 'showRegister'])->name('re
 Route::post('/register', [RegisterMsController::class, 'register']);
 
 // 🔑 ĐĂNG NHẬP / ĐĂNG XUẤT
+
 Route::get('/login', [LoginController::class, 'showLogin'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

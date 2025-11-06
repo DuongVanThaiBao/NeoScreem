@@ -5,13 +5,15 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\Phim;
 class LoginController extends Controller
 {
 
     public function showLogin()
     {
-        return view('auth.login');
+        $phimDangChieu = Phim::where('trang_thai', 'Đang chiếu')->get();
+        $movies = Phim::where('trang_thai', 'Đang chiếu')->get();
+        return view('auth.login', compact('phimDangChieu', 'movies'));
     }
 
     public function login(Request $request)
