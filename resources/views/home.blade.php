@@ -308,16 +308,17 @@
                                     </h2>
                                 </nav>
                             </div>
-                    <!-- PHIM ĐANG CHIẾU -->
-                        {{-- Div bọc ngoài để định vị các nút bấm --}}
-                        <di class="relative">
+                            <!-- PHIM ĐANG CHIẾU -->
+                                {{-- Div bọc ngoài để định vị các nút bấm --}}
+                        <div class="relative">
 
                             {{-- Container của slider --}}
                             <div id="phim-dang-chieu" class="hide-scrollbar tab-content mt-5 flex overflow-x-auto space-x-6 scroll-smooth no-scrollbar p-2">
                                 
                                 @foreach($phimDangChieu->take(8) as $phim)
                                     {{-- THẺ PHIM ĐÃ ĐƯỢC THÊM CÁC CLASS CHIỀU RỘNG --}}
-                                <div class="atropos group relative flex flex-col h-full cursor-pointer bg-gray-800/50 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-1 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6 flex-shrink-0">
+                                    <a href="{{ route('movie.show', $phim->id) }}">
+                                    <div class="atropos group relative flex flex-col h-full cursor-pointer bg-gray-800/50 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-1 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6 flex-shrink-0">
                                         
                                         {{-- Phần atropos scale --}}
                                           <div class="atropos-scale">
@@ -363,11 +364,12 @@
                                                 data-trailer-id="{{ $phim->trailer_id ?? '' }}">
                                             <i class="fa-solid fa-play text-yellow-400"></i> Trailer
                                         </button>
-                                        <a href="#" class="rounded bg-yellow-400 px-3 py-1 text-xs font-bold text-black hover:bg-yellow-500">
+                                        <a href="{{ route('movie.show', $phim->id) }}" class="rounded bg-yellow-400 px-3 py-1 text-xs font-bold text-black hover:bg-yellow-500">
                                             TÌM HIỂU THÊM
                                         </a>
                                     </div>
                                 </div>
+                                </a>
                                 </div>
                                     @endforeach
                                 </div>
@@ -412,6 +414,7 @@
                             <div id="phim-sap-chieu" class="hide-scrollbar tab-content mt-5 flex overflow-x-auto space-x-6 scroll-smooth no-scrollbar p-2">
 
                                 @foreach($phimSapChieu->take(8) as $phim)
+                                <a href="{{ route('movie.show', $phim->id) }}">
                                     {{-- THẺ PHIM ĐÃ ĐƯỢC THÊM CÁC CLASS CHIỀU RỘNG --}}
                                     <div class="atropos group relative flex flex-col h-full cursor-pointer bg-gray-800/50 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-1 w-1/2 sm:w-1/3 md:w-1/4 lg:w-1/6 flex-shrink-0">
                                         
@@ -459,12 +462,13 @@
                                                 data-trailer-id="{{ $phim->trailer_id ?? '' }}">
                                             <i class="fa-solid fa-play text-yellow-400"></i> Trailer
                                         </button>
-                                        <a href="#" class="rounded bg-yellow-400 px-3 py-1 text-xs font-bold text-black hover:bg-yellow-500">
+                                        <a href="{{ route('movie.show', $phim->id) }}" class="rounded bg-yellow-400 px-3 py-1 text-xs font-bold text-black hover:bg-yellow-500">
                                             TÌM HIỂU THÊM
                                         </a>
                                     </div>
-                                </div>
                                     </div>
+                                    </div>
+                                </a>
                                 @endforeach
                             </div>
 

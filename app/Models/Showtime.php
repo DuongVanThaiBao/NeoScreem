@@ -14,19 +14,22 @@ class Showtime extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'movie_id',
-        'theater_id',
-        'show_date',
-        'show_time',
+        'phim_id',
+        'rap_id', // SỬA: Khớp với DB (có 's')
+        'ngay_chieu',  // SỬA: Khớp với DB
+        'gio_chieu',   // SỬA: Khớp với DB
+        'gia_ve',
+        'dinh_dang'
     ];
 
     public function movie()
     {
-        return $this->belongsTo(Phim::class, 'movie_id');
+        return $this->belongsTo(Phim::class, 'phim_id');
     }
 
+    // SỬA: Đổi tên quan hệ và khóa ngoại
     public function theater()
     {
-        return $this->belongsTo(Theater::class, 'theater_id');
+        return $this->belongsTo(Theater::class, 'rap_id'); // Dùng 'rap_id'
     }
 }

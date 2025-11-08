@@ -18,6 +18,7 @@ class Theater extends Model
 
     public function showtimes()
     {
-        return $this->hasMany(Showtime::class, 'theater_id');
+        // migration created the foreign key column 'theaters_id' in showtimes
+        return $this->hasMany(Showtime::class, 'rap_id');
     }
 }

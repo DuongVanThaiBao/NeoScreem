@@ -30,7 +30,7 @@ Route::get('/api/times/{phim_id}/{rap_id}/{ngay_chieu}', [ShowtimeController::cl
 // 🎬 PHIM (đang chiếu / sắp chiếu)
 Route::get('/showing', [HomeController::class, 'showing'])->name('showing');
 Route::get('/upcoming', [HomeController::class, 'upcoming'])->name('upcoming');
-
+Route::get('/phim/{id}', [PhimController::class, 'show'])->name('movie.show');
 // 🔍 TÌM KIẾM PHIM
 Route::get('/search', [PhimController::class, 'search'])->name('movie.search');
 

@@ -31,6 +31,6 @@ class Phim extends Model
     // Một phim có nhiều suất chiếu
     public function showtimes()
     {
-        return $this->hasMany(Showtime::class, 'movie_id');
+        return $this->hasMany(Showtime::class, 'phim_id');
     }
 }
