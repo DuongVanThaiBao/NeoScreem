@@ -2,34 +2,75 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Phim;
-use App\Models\Theater;
+use App\Models\Booking;
+use App\Models\Snack;
 use App\Models\Showtime;
+use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
-    public function index()
+    // Hiển thị trang chọn ghế + snack
+    public function show($showtimeId)
     {
-        $phims = Phim::all();
-        $theaters = Theater::all();
-        return view('booking.index', compact('phims', 'theaters'));
+        // Load showtime kèm movie và room
+        $showtime = Showtime::with(['phim', 'room.seats'])->findOrFail($showtimeId);
+
+        $phim = $showtime->phim; // Lấy phim từ showtime
+        $snacks = Snack::all();   // Lấy tất cả snack
+
+        return view('booking.choose', compact('showtime', 'phim', 'snacks'));
     }
 
-    public function getRaps($phim_id)
+    public function choose($phimId)
     {
-        $raps = Theater::whereHas('showtimes', function ($query) use ($phim_id) {
-            $query->where('movie_id', $phim_id);
-        })->get();
+        // Lấy tất cả suất chiếu của phim
+        $showtimes = Showtime::where('phim_id', $phimId)->with('room.seats')->get();
 
-        return response()->json($raps);
+        $phim = $showtimes->first()->phim ?? null; // Lấy phim từ suất chiếu đầu tiên
+        $snacks = Snack::all();   // Lấy tất cả snack
+
+        return view('booking.choose', compact('showtimes', 'phim', 'snacks'));
     }
 
-    public function getTimes($phim_id, $rap_id)
+    // Xử lý đặt vé
+    public function finalize(Request $request, $showtimeId)
     {
-        $showtimes = Showtime::where('movie_id', $phim_id)
-            ->where('theater_id', $rap_id)
-            ->get(['show_time', 'show_date']);
-        return response()->json($showtimes);
+        $showtime = Showtime::findOrFail($showtimeId);
+
+        $request->validate([
+            'seats' => 'required|array',
+            'seats.*' => 'exists:seats,id',
+            'snacks' => 'array',
+            'snacks.*' => 'integer|min:0'
+        ]);
+
+        $booking = Booking::create([
+            'showtime_id' => $showtime->id,
+            'khach_hang' => 'Khách vãng lai', // tạm
+            'tong_tien' => $showtime->gia_ve * count($request->seats)
+        ]);
+
+        // Lưu ghế
+        $booking->seats()->attach($request->seats);
+
+        // Lưu snack
+        if ($request->snacks) {
+            foreach ($request->snacks as $snack_id => $qty) {
+                if ($qty > 0) {
+                    $booking->snacks()->attach($snack_id, ['so_luong' => $qty]);
+                    $booking->tong_tien += Snack::find($snack_id)->gia * $qty;
+                }
+            }
+            $booking->save();
+        }
+
+        return redirect()->route('booking.success', $booking->id);
+    }
+
+    // Trang thành công
+    public function success($bookingId)
+    {
+        $booking = Booking::with(['showtime.movie', 'seats', 'snacks'])->findOrFail($bookingId);
+        return view('booking.success', compact('booking'));
     }
 }

@@ -73,7 +73,7 @@
         <header class="sticky top-0 z-50 border-b border-gray-200/10 dark:border-gray-800/10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm">
             <div class="container mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 py-3">
                 <div class="flex items-center gap-8">
-                    <a class="flex items-center gap-3 text-gray-900 dark:text-white" href="#">
+                    <a class="flex items-center gap-3 text-gray-900 dark:text-white" href="{{ route('home') }}">
                         <svg class="h-8 w-8 text-primary " fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg"><path clip-rule="evenodd" d="M24 18.4228L42 11.475V34.3663C42 34.7796 41.7457 35.1504 41.3601 35.2992L24 42V18.4228Z" fill="currentColor" fill-rule="evenodd"></path><path clip-rule="evenodd" d="M24 8.18819L33.4123 11.574L24 15.2071L14.5877 11.574L24 8.18819ZM9 15.8487L21 20.4805V37.6263L9 32.9945V15.8487ZM27 37.6263V20.4805L39 15.8487V32.9945L27 37.6263ZM25.354 2.29885C24.4788 1.98402 23.5212 1.98402 22.646 2.29885L4.98454 8.65208C3.7939 9.08038 3 10.2097 3 11.475V34.3663C3 36.0196 4.01719 37.5026 5.55962 38.098L22.9197 44.7987C23.6149 45.0671 24.3851 45.0671 25.0803 44.7987L42.4404 38.098C43.9828 37.5026 45 36.0196 45 34.3663V11.475C45 10.2097 44.2061 9.08038 43.0155 8.65208L25.354 2.29885Z" fill="currentColor" fill-rule="evenodd"></path></svg>
                         <h1 class="text-xl font-bold">NeoScreem</h1>
                     </a>
@@ -299,6 +299,7 @@
                                     {{-- THẺ PHIM ĐÃ ĐƯỢC THÊM CÁC CLASS CHIỀU RỘNG --}}
                                 <div class="atropos group relative flex flex-col h-full cursor-pointer bg-gray-800/50 rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:-translate-y-1">                                        
                                         {{-- Phần atropos scale --}}
+                                <a href="{{ route('movie.show', $phim->id) }}">
                                           <div class="atropos-scale">
                                     <div class="atropos-rotate">
                                         <div class="atropos-inner rounded-lg overflow-hidden relative">
@@ -325,6 +326,7 @@
 
                                         </div>
                                     </div>
+                                
                                 </div>
 
                                        <div class="p-3 text-center bg-gray-900">
@@ -342,11 +344,12 @@
                                                 data-trailer-id="{{ $phim->trailer_id ?? '' }}">
                                             <i class="fa-solid fa-play text-yellow-400"></i> Trailer
                                         </button>
-                                        <a href="#" class="rounded bg-yellow-400 px-3 py-1 text-xs font-bold text-black hover:bg-yellow-500">
+                                        <a href="{{ route('movie.show', $phim->id) }}" class="rounded bg-yellow-400 px-3 py-1 text-xs font-bold text-black hover:bg-yellow-500">
                                             TÌM HIỂU THÊM
                                         </a>
                                     </div>
                                 </div>
+                            </a>
                                     </div>
                                 @endforeach
                             </div>

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Seat;
+use App\Models\Snack;
 use App\Models\User;
 use App\Models\Users;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -16,9 +18,12 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             TheaterSeeder::class,
-            UserSeeder::class,
-            AdminUserSeeder::class,
+            roomsSeeder::class,
+            SeatSeeder::class,
             PhimSeeder::class,
+            UserSeeder::class,
+            SnackSeeder::class,
+            AdminUserSeeder::class,
             KhuyenMaiSeeder::class, 
             ShowtimeSeeder::class, 
         ]);

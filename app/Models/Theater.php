@@ -9,16 +9,15 @@ class Theater extends Model
 {
     use HasFactory;
 
-    protected $table = 'theaters';
-    protected $fillable = [
-        'ten_rap',
-        'dia_chi',
-        'thanh_pho',
-    ];
+    protected $fillable = ['name', 'location'];
+
+    public function rooms()
+    {
+        return $this->hasMany(Room::class);
+    }
 
     public function showtimes()
     {
-        // migration created the foreign key column 'theaters_id' in showtimes
         return $this->hasMany(Showtime::class, 'rap_id');
     }
 }

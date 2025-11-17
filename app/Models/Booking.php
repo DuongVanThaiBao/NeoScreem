@@ -12,9 +12,13 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'showtime_id',
-        'seats',
+        'seats',      // dạng JSON: ["A1","A2"]
         'total_price',
         'status'
+    ];
+
+    protected $casts = [
+        'seats' => 'array'
     ];
 
     public function user()
@@ -25,5 +29,16 @@ class Booking extends Model
     public function showtime()
     {
         return $this->belongsTo(Showtime::class);
+    }
+
+    public function bookingSnacks()
+    {
+        return $this->hasMany(BookingSnack::class, 'booking_id');
+    }
+
+    public function getTotalWithSnacksAttribute()
+    {
+        $snackTotal = $this->bookingSnacks->sum('thanh_tien');
+        return (float) $this->total_price + (float) $snackTotal;
     }
 }

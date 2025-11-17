@@ -3,11 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Phim;
-use App\Models\Theater; // <-- THAY ĐỔI: SỬ DỤNG MODEL 'THEATER'
+use App\Models\listTheaters; // <-- THAY ĐỔI: SỬ DỤNG MODEL 'THEATER'
 use App\Models\Showtime;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
+use App\Models\Snack; // <-- THAY ĐỔI: Thêm use cho Model Snack
 class PhimController extends Controller
 {
     /**
@@ -40,7 +40,13 @@ class PhimController extends Controller
     {
         $phim = Phim::findOrFail($id);
         $today = Carbon::today();
+        
 
+        // Lấy tất cả snack
+        $snacks = Snack::all();
+
+        // Trả về view movie.show với movie + snack
+        return view('movie.show', compact('phim', 'snacks'));
         // 1. Lấy suất chiếu sắp tới (Đã cập nhật tên cột)
         $showtimesRaw = $phim->showtimes()
             ->whereDate('ngay_chieu', '>=', $today) // Dùng cột 'ngay_chieu'
@@ -69,21 +75,43 @@ class PhimController extends Controller
         });
 
         // 4. Lấy danh sách rạp (đã được lọc)
-        $cinemaIds = $filteredShowtimes->pluck('rap.id')->unique()->filter(); // <-- THAY ĐỔI: Dùng 'theater'
-        $cinemasWithShowtimes = Theater::whereIn('id', $cinemaIds)->get(); // <-- THAY ĐỔI: Dùng Model 'Theater'
+        // Lấy id của rạp một cách an toàn từ quan hệ đã eager-loaded
+        $cinemaIds = $filteredShowtimes->map(function ($s) {
+            return $s->theater->id ?? null;
+        })->filter()->unique()->values();
+
+        $cinemasWithShowtimes = $cinemaIds->isNotEmpty() ? \App\Models\Theater::whereIn('id', $cinemaIds)->get() : collect();
 
         // 5. Nhóm dữ liệu theo Ngày -> Rạp (Đã cập nhật tên cột)
         $showtimesByDate = $filteredShowtimes->groupBy(function ($item) {
             return Carbon::parse($item->ngay_chieu)->format('Y-m-d'); // Dùng 'ngay_chieu'
         })->map(function ($byDate) {
-            return $byDate->groupBy('theater.id')->map(function ($byCinema) { // <-- THAY ĐỔI: Dùng 'theater'
-                // 'theater' ở đây là tên quan hệ
+            return $byDate->groupBy(function ($s) {
+                return $s->theater->id ?? 0;
+            })->map(function ($byCinema) {
+                // Map times to plain arrays with only the fields the frontend needs
+                $times = $byCinema->map(function ($s) {
+                    return [
+                        'id' => $s->id,
+                        'gio_chieu' => $s->gio_chieu,
+                        'gia_ve' => $s->gia_ve,
+                        'dinh_dang' => $s->dinh_dang ?? null,
+                    ];
+                })->values();
+
+                $firstShow = $byCinema->first();
+                $theater = $firstShow->theater ?? null;
+
+                // Use existing DB columns; fall back to 'name'/'location' if 'ten_rap'/'dia_chi' are absent
+                $tenRap = $theater->ten_rap ?? $theater->name ?? '';
+                $diaChi = $theater->dia_chi ?? $theater->location ?? '';
+
                 return [
-                    'ten_rap' => $byCinema->first()->theater->ten_rap, // <-- THAY ĐỔI: Dùng 'theater'
-                    'dia_chi' => $byCinema->first()->theater->dia_chi, // <-- THAY ĐỔI: Dùng 'theater'
-                    'times' => $byCinema,
+                    'ten_rap' => $tenRap,
+                    'dia_chi' => $diaChi,
+                    'times' => $times,
                 ];
-            });
+            })->filter();
         });
 
         // 6. Trả về View
@@ -102,7 +130,7 @@ class PhimController extends Controller
     {
         // Lấy tất cả rạp, nhóm theo 'thanh_pho'
         // Sắp xếp theo tên thành phố
-        $theatersByCity = Theater::all()->sortBy('thanh_pho')->groupBy('thanh_pho'); // <-- THAY ĐỔI: Dùng Model 'Theater'
+        $theatersByCity = \App\Models\Theater::all()->sortBy('thanh_pho')->groupBy('thanh_pho'); // <-- THAY ĐỔI: Dùng Model 'Theater'
 
         // Trả về view mới, truyền dữ liệu rạp đã nhóm
         return view('theater.index', compact('theatersByCity')); // <-- THAY ĐỔI: Trỏ đến view 'theater.index'

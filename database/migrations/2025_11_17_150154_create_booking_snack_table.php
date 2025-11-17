@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Tên bảng thường là tên 2 bảng ghép lại theo thứ tự alphabet, dạng số ít
-        Schema::create('phim_khuyen_mai', function (Blueprint $table) {
+        Schema::create('booking_snacks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('phim_id')->constrained('phim')->onDelete('cascade'); // bảng 'phim'
-            $table->string('ten');
-            $table->decimal('gia_giam', 10, 2);
+            $table->foreignId('booking_id')->constrained('bookings')->onDelete('cascade');
+            $table->foreignId('snack_id')->constrained('snacks')->onDelete('cascade');
+            $table->integer('so_luong')->default(1);
+            $table->integer('thanh_tien');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('phim_khuyen_mai');
+        Schema::dropIfExists('booking_snacks');
     }
 };

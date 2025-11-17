@@ -4,32 +4,33 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Phim;
+
 
 class Showtime extends Model
 {
-    use HasFactory;
+    protected $fillable = ['phim_id','room_id','ngay_chieu','gio_chieu','gia_ve'];
 
-    protected $table = 'showtimes';
-    protected $primaryKey = 'id';
-    public $timestamps = true;
-
-    protected $fillable = [
-        'phim_id',
-        'rap_id', // SỬA: Khớp với DB (có 's')
-        'ngay_chieu',  // SỬA: Khớp với DB
-        'gio_chieu',   // SỬA: Khớp với DB
-        'gia_ve',
-        'dinh_dang'
-    ];
-
-    public function movie()
+    public function phim()
     {
-        return $this->belongsTo(Phim::class, 'phim_id');
+        return $this->belongsTo(Phim::class);
     }
 
-    // SỬA: Đổi tên quan hệ và khóa ngoại
+    public function room()
+    {
+        return $this->belongsTo(Room::class);
+    }
+
     public function theater()
     {
-        return $this->belongsTo(Theater::class, 'rap_id'); // Dùng 'rap_id'
+        return $this->belongsTo(Theater::class, 'rap_id');
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
     }
 }
+
+
+

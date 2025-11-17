@@ -20,6 +20,7 @@ class ShowtimeController extends Controller
         return response()->json($theaters);
     }
 
+    
     // Lấy danh sách ngày chiếu theo phim + rạp
     public function getDates($phim_id, $rap_id)
     {
@@ -33,13 +34,14 @@ class ShowtimeController extends Controller
     }
 
     // Lấy giờ chiếu theo phim + rạp + ngày
-    public function getTimes($phim_id, $rap_id, $ngay_chieu)
+    public function getTimes($phimId, $rapId, $ngay)
     {
-        $times = Showtime::where('phim_id', $phim_id)
-            ->where('rap_id', $rap_id)
-            ->whereDate('ngay_chieu', $ngay_chieu)
-            ->pluck('gio_chieu');
+        $showtimes = Showtime::where('movie_id', $phimId)
+            ->where('rap_id', $rapId)
+            ->whereDate('ngay_chieu', $ngay)
+            ->get(['id', 'gio_chieu']);
 
-        return response()->json($times);
+        return response()->json($showtimes);
     }
+
 }
