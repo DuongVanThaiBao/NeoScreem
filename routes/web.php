@@ -14,6 +14,7 @@ use App\Http\Controllers\ProfileController;
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar'])->name('profile.update.avatar');
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
 });
 // use App\Http\Controllers\Admin\AdminController; // Dòng này không còn cần thiết nữa

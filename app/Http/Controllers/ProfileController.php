@@ -87,4 +87,29 @@ class ProfileController extends Controller
         // 4. Trả về với thông báo thành công
         return back()->with('status', 'Đổi mật khẩu thành công!');
     }
+
+    public function updateAvatar(Request $request)
+    {
+        // 1. Validate file
+        $request->validate([
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Bắt buộc, là ảnh, max 2MB
+        ]);
+
+        $user = $request->user();
+
+        // 2. Xóa avatar cũ nếu có
+        if ($user->avatar) {
+            Storage::disk('public')->delete($user->avatar);
+        }
+
+        // 3. Lưu file mới vào 'storage/app/public/avatars'
+        // File sẽ có tên ngẫu nhiên, ví dụ: 'avatars/random_string.jpg'
+        $path = $request->file('avatar')->store('avatars', 'public');
+
+        // 4. Cập nhật đường dẫn vào CSDL
+        $user->update(['avatar' => $path]);
+
+        // 5. Quay lại với thông báo
+        return redirect()->route('profile')->with('status', 'Cập nhật ảnh đại diện thành công!');
+    }
 }

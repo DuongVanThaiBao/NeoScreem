@@ -20,6 +20,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role', // 👈 Thêm dòng này để lưu role khi tạo user/admin
+        'avatar', // 👈 Thêm dòng này để lưu avatar người dùng
     ];
 
     /**

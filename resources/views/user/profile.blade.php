@@ -45,11 +45,17 @@
                         <button type="button" class="flex max-w-xs items-center rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                             <span class="sr-only">Open user menu</span>
                             {{-- Thay thế bằng avatar thật nếu có --}}
+                            @if (Auth::user()->avatar)
+                            <img class="h-8 w-8 rounded-full object-cover"
+                                src="{{ asset('storage/' . Auth::user()->avatar) }}"
+                                alt="{{ Auth::user()->name }}">
+                            @else
                             <span class="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
                                 <svg class="h-5 w-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 256 256">
                                     <path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.79,40.31,185.67,25.08,212a8,8,0,0,0,13.84,8c18.1-31.33,50.62-52,89.08-52s71,20.67,89.08,52a8,8,0,0,0,13.84-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path>
                                 </svg>
                             </span>
+                            @endif
                             <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 hidden md:block">{{ Auth::user()->name }}</span>
                             <svg class="ml-1 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -75,13 +81,28 @@
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
 
             <aside class="lg:col-span-1 bg-gray-900/70 p-6 rounded-lg self-start">
-                <div class="flex items-center space-x-4 mb-6">
-                    <img class="h-16 w-16 rounded-full border-2 border-red-500" src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="User avatar">
-                    <div>
-                        <h2 class="font-bold text-lg text-white">{{ Auth::user()->name }}</h2>
-                        <a href="#" class="text-xs text-gray-400 hover:text-red-500">Thay đổi ảnh đại diện</a>
+                <form method="POST" action="{{ route('profile.update.avatar') }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="flex items-center space-x-4 mb-4">
+
+                        <img id="avatar-preview" class="h-16 w-16 rounded-full border-2 border-red-500 object-cover"
+                            src="{{ Auth::user()->avatar ? asset('storage/' . Auth::user()->avatar) : 'https://i.pravatar.cc/150?u=a042581f4e29026704d' }}"
+                            alt="User avatar">
+
+                        <input type="file" name="avatar" id="avatar-input" class="hidden" accept="image/*">
+
+                        <div>
+                            <h2 class="font-bold text-lg text-white">{{ Auth::user()->name }}</h2>
+                            <label for="avatar-input" class="cursor-pointer text-xs text-gray-400 hover:text-red-500 transition-colors">
+                                Thay đổi ảnh đại diện
+                            </label>
+                        </div>
                     </div>
-                </div>
+
+                    <button id="save-avatar-button" type="submit" class="hidden w-full bg-red-600 text-white font-bold py-2 px-4 rounded-md hover:bg-red-700 transition-colors text-sm mb-6">
+                        Lưu ảnh đại diện
+                    </button>
+                </form>
 
                 <div class="bg-gradient-to-br from-red-600 to-red-800 text-white p-4 rounded-lg mb-6 shadow-lg">
                     <h3 class="font-bold text-xl">C'Friends</h3>
@@ -224,6 +245,26 @@
                 if (!userMenuButton.contains(event.target) && !userMenu.contains(event.target)) {
                     userMenuButton.setAttribute('aria-expanded', 'false');
                     userMenu.classList.add('hidden');
+                }
+            });
+        }
+        const avatarInput = document.getElementById('avatar-input');
+        const avatarPreview = document.getElementById('avatar-preview');
+        const saveAvatarButton = document.getElementById('save-avatar-button');
+
+        if (avatarInput && avatarPreview && saveAvatarButton) {
+            avatarInput.addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    // Tạo URL tạm thời để xem trước
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        avatarPreview.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+
+                    // Hiển thị nút lưu
+                    saveAvatarButton.classList.remove('hidden');
                 }
             });
         }
