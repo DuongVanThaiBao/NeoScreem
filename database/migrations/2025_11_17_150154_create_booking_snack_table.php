@@ -11,13 +11,20 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('booking_snacks', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('booking_id')->constrained('bookings')->onDelete('cascade');
-            $table->foreignId('snack_id')->constrained('snacks')->onDelete('cascade');
-            $table->integer('so_luong')->default(1);
-            $table->integer('thanh_tien');
-            $table->timestamps();
+        // Tên bảng phải khớp: 'booking_snack'
+        Schema::create('booking_snack', function (Blueprint $table) {
+
+            // Cột foreign key cho Booking
+            $table->foreignId('booking_id')->constrained()->onDelete('cascade');
+
+            // Cột foreign key cho Snack
+            $table->foreignId('snack_id')->constrained()->onDelete('cascade');
+
+            // Cột 'so_luong' (BẮT BUỘC, vì bạn đã định nghĩa 'withPivot')
+            $table->integer('so_luong');
+
+            // Đặt khóa chính 2 cột để tránh trùng lặp
+            $table->primary(['booking_id', 'snack_id']);
         });
     }
 
@@ -26,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('booking_snacks');
+        Schema::dropIfExists('booking_snack');
     }
 };

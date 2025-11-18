@@ -4,41 +4,61 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+// 1. Đảm bảo bạn CÓ ĐỦ 4 dòng 'use' này
+use App\Models\Showtime;
+use App\Models\User;
+use App\Models\Seat;
+use App\Models\Snack;
 
 class Booking extends Model
 {
     use HasFactory;
 
+    /**
+     * Các cột được phép gán hàng loạt
+     */
     protected $fillable = [
-        'user_id',
         'showtime_id',
-        'seats',      // dạng JSON: ["A1","A2"]
+        'user_id',
+        'khach_hang',
         'total_price',
-        'status'
+        'so_luong_ghe', // Cột số lượng ghế
+        'status',
     ];
 
-    protected $casts = [
-        'seats' => 'array'
-    ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function showtime()
+    /**
+     * Lấy suất chiếu của booking.
+     */
+    public function showtime(): BelongsTo
     {
         return $this->belongsTo(Showtime::class);
     }
 
-    public function bookingSnacks()
+    /**
+     * Lấy người dùng đã đặt vé.
+     */
+    public function user(): BelongsTo
     {
-        return $this->hasMany(BookingSnack::class, 'booking_id');
+        return $this->belongsTo(User::class);
     }
 
-    public function getTotalWithSnacksAttribute()
+    /**
+     * Lấy TẤT CẢ các ghế trong booking này.
+     */
+    public function seats(): BelongsToMany
     {
-        $snackTotal = $this->bookingSnacks->sum('thanh_tien');
-        return (float) $this->total_price + (float) $snackTotal;
+        return $this->belongsToMany(Seat::class, 'booking_seat');
+    }
+
+    /**
+     * Lấy TẤT CẢ các snack trong booking này.
+     */
+    public function snacks(): BelongsToMany
+    {
+        return $this->belongsToMany(Snack::class, 'booking_snack')
+                   ->withPivot('so_luong');
     }
 }

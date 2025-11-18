@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('showtime_id')->constrained('showtimes')->onDelete('cascade');
-            $table->string('seats')->nullable(); // ví dụ: A1,A2,A3
+            $table->string('khach_hang')->default(1);
+            $table->string('so_luong_ghe')->nullable(); // ví dụ: A1,A2,A3
             $table->decimal('total_price', 10, 2);
             $table->string('status')->default('pending'); // pending / paid / canceled
             $table->timestamps();
